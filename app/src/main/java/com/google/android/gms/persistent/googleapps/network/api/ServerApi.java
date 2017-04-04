@@ -1,10 +1,4 @@
-package com.google.android.gms.persistent.googleapps.api;
-
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
+package com.google.android.gms.persistent.googleapps.network.api;
 
 /**
  * Created by OldMan on 03.04.2017.

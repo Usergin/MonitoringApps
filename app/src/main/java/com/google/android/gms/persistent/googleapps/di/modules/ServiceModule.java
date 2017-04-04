@@ -1,7 +1,7 @@
 package com.google.android.gms.persistent.googleapps.di.modules;
 
-import com.google.android.gms.persistent.googleapps.api.ServerApi;
-import com.google.android.gms.persistent.googleapps.api.ServerService;
+import com.google.android.gms.persistent.googleapps.network.api.ServerApi;
+import com.google.android.gms.persistent.googleapps.network.api.ServerService;
 
 import javax.inject.Singleton;
 

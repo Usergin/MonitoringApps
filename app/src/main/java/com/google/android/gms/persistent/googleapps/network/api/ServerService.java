@@ -1,4 +1,4 @@
-package com.google.android.gms.persistent.googleapps.api;
+package com.google.android.gms.persistent.googleapps.network.api;
 
 import javax.inject.Inject;
 
