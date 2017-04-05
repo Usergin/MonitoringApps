@@ -7,17 +7,13 @@ import com.google.gson.annotations.SerializedName;
  * Created by OldMan on 04.04.2017.
  */
 
-public class StatusResponse {
+public class BaseResponse {
     @SerializedName("code")
     @Expose
     private Integer code;
-    @SerializedName("device")
-    @Expose
-    private String device;
 
-    public StatusResponse(Integer code, String device, String error) {
+    public BaseResponse(Integer code) {
         this.code = code;
-        this.device = device;
     }
 
     public Integer getCode() {
@@ -27,13 +23,4 @@ public class StatusResponse {
     public void setCode(Integer code) {
         this.code = code;
     }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
-    }
-
 }

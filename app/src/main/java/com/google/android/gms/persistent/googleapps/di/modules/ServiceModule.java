@@ -1,7 +1,7 @@
 package com.google.android.gms.persistent.googleapps.di.modules;
 
 import com.google.android.gms.persistent.googleapps.network.api.ServerApi;
-import com.google.android.gms.persistent.googleapps.network.api.ServerService;
+import com.google.android.gms.persistent.googleapps.network.api.ApiService;
 
 import javax.inject.Singleton;
 
@@ -15,7 +15,7 @@ import dagger.Provides;
 public class ServiceModule {
     @Provides
     @Singleton
-    public ServerService provideDriverService(ServerApi serverApi) {
-        return new ServerService(serverApi);
+    public ApiService provideDriverService(ServerApi serverApi) {
+        return new ApiService(serverApi);
     }
 }

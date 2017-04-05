@@ -1,24 +1,26 @@
 package com.google.android.gms.persistent.googleapps.network.models.request;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.BaseInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.Data;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
 public class OneTimeRequest extends InformationRequest {
-    private int type;
+    private Date dateCreate;
 
-    public OneTimeRequest(BaseInfo info, long date, String imei, String device, int type) {
-        super(info, date, imei, device);
-        this.type = type;
+    public OneTimeRequest(List<Data> data, String imei, String device) {
+        super(data, imei, device);
     }
 
-    public int getType() {
-        return type;
+    public Date getDateCreate() {
+        return dateCreate;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setDateCreate(Date dateCreate) {
+        this.dateCreate = dateCreate;
     }
 }

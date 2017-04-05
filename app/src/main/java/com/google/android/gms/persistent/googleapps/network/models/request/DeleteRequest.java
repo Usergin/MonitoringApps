@@ -5,8 +5,6 @@ package com.google.android.gms.persistent.googleapps.network.models.request;
  */
 
 public class DeleteRequest extends BaseRequest {
-    private String imei;
-    private String device;
     private String mode;
 
     public DeleteRequest(String mode, String imei, String device) {

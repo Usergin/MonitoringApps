@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName;
  * Created by OldMan on 05.04.2017.
  */
 
-public class PeriodicalResponse {
+public class Settings {
+
     @SerializedName("code")
     @Expose
     private int code;
@@ -32,18 +33,6 @@ public class PeriodicalResponse {
     @SerializedName("contact_list")
     @Expose
     private int contact_list;
-
-    public PeriodicalResponse(int code, int geo, int sms, int call, int sms_list, int apps_list,
-                              int calls_list, int contact_list) {
-        this.code = code;
-        this.geo = geo;
-        this.sms = sms;
-        this.call = call;
-        this.sms_list = sms_list;
-        this.apps_list = apps_list;
-        this.calls_list = calls_list;
-        this.contact_list = contact_list;
-    }
 
     public int getCode() {
         return code;
