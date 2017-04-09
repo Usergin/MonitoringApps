@@ -1,4 +1,4 @@
-package com.google.android.gms.persistent.googleapps;
+package com.google.android.gms.persistent.googleapps.utils;
 
 /**
  * Created by OldMan on 05.04.2017.

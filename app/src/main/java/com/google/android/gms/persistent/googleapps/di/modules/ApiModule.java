@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 public class ApiModule {
     @Provides
     @Singleton
-    public ServerApi provideAuthApi(Retrofit retrofit) {
+    public ServerApi provideServerApi(Retrofit retrofit) {
         return retrofit.create(ServerApi.class);
     }
 }

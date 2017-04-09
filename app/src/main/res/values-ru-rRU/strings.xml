@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Службы Google</string>
+    <string name="ip_server_address">Введите ip адрес сервера!</string>
+    <string name="request_permission">Требуются разрешения для работы приложения</string>
+    <string name="settings">Настройки</string>
+    <string name="please_wait">Пожалуйста подождите, идет соединение с сервером!</string>
+
 </resources>

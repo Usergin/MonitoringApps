@@ -21,7 +21,7 @@ import retrofit2.Call;
 
 public class ApiService {
     @Inject
-    private ServerApi serverApi;
+    ServerApi serverApi;
 
     public ApiService(ServerApi serverApi) {
         this.serverApi = serverApi;

@@ -1,5 +1,6 @@
 package com.google.android.gms.persistent.googleapps.repositories;
 
+import com.google.android.gms.persistent.googleapps.network.api.ApiService;
 import com.google.android.gms.persistent.googleapps.network.models.request.DeleteRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InformationRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InitialRequest;
@@ -9,6 +10,8 @@ import com.google.android.gms.persistent.googleapps.network.models.response.Info
 import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.SyncResponse;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 
 /**
@@ -16,6 +19,11 @@ import io.reactivex.Observable;
  */
 
 public class NetworkRepoImpl implements NetworkRepo {
+    private ApiService apiService;
+    @Inject
+    public NetworkRepoImpl( ApiService apiService) {
+        this.apiService = apiService;
+    }
     @Override
     public Observable<InitialResponse> onInitDevice(InitialRequest request) {
         return null;

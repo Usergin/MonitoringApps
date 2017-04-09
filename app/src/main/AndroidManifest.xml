@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.google.android.gms.persistent.googleapps"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+          package="com.google.android.gms.persistent.googleapps"
           xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--<uses-feature android:name="android.hardware.telephony"/>-->
+    <!--<uses-feature android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!--<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>-->
+
+    <!-- For sending sms/call tiles in the future -->
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- For sending/receiving events -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+     <!-- For sending location tiles in the future -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--// privileged-->
+    <!--<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"-->
+                     <!--tools:protectionLevel="signature|privileged|development"/>-->
 
     <application
         android:name=".App"
@@ -10,7 +36,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
