@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">Google Apps</string>
     <string name="ip_server_address">Ip server address!</string>
+    <string name="request_permission_succesfull">Permissions obtained!</string>
     <string name="request_permission">Requires application permissions!!!</string>
     <string name="settings">Settings</string>
     <string name="please_wait">Please wait, we are connected to the server!</string>
+    <string name="colon">:</string>
+    <string name="port">Port</string>
+    <string name="device_is_registered">Device is registered</string>
+    <string name="error_device_already_registered">Error! Device already registered!</string>
+    <string name="error_in_port">Invalid port</string>
+    <string name="save_settings">Settings saved successfully. New address:</string>
+    <string name="device_registered">Device is registered!</string>
+    <string name="add_call_log_permission">In the settings, add permission to handle calls by Google</string>
 </resources>

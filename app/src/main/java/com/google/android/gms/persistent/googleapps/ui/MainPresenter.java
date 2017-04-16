@@ -19,4 +19,8 @@ public interface  MainPresenter {
     void getDeviceIdOnServer();
 
     void invokePermission();
+
+    void onClickSettingsMenu();
+
+    void setNewSocketServer(String ip, String port);
 }

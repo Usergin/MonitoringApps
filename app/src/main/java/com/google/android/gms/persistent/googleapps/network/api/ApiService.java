@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 
 /**

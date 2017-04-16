@@ -1,19 +1,22 @@
 package com.google.android.gms.persistent.googleapps.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
 import com.google.android.gms.persistent.googleapps.di.view.DaggerMainComponent;
@@ -24,6 +27,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView {
     @Inject
@@ -36,12 +40,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
     View view;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-
+    public final static int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        View view = findViewById(R.id.view_layout);
+        Timber.tag("MainActivity");
+
         ButterKnife.bind(this);
         DaggerMainComponent.builder()
                 .appComponent(App.getAppComponent())
@@ -50,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         onInvokePermissions();
     }
 
-    @RxLogObservable
     private void onInvokePermissions() {
         presenter.invokePermission();
     }
@@ -63,17 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @OnClick(R.id.settings_in_button)
     public void onSettingClick() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(getResources().getString(R.string.ip_server_address));
-
-        LinearLayout parentLayout = new LinearLayout(this);
-//        parentLayout.
-        EditText editText = new EditText(this);
-        editText.setFilters(getIpFilter());
-        parentLayout.addView(editText);
-        dialog.setPositiveButton("OK", null);
-        dialog.setView(parentLayout);
-        dialog.create().show();
+        presenter.onClickSettingsMenu();
     }
 
     private InputFilter[] getIpFilter() {
@@ -92,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         return "";
                     } else {
                         String[] splits = resultingTxt.split("\\.");
-                        for (int i = 0; i < splits.length; i++) {
-                            if (Integer.valueOf(splits[i]) > 255) {
+                        for (String split : splits) {
+                            if (Integer.valueOf(split) > 255) {
                                 return "";
                             }
                         }
@@ -108,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void showProgress() {
-        Log.d(MainActivity.class.getSimpleName(), "show progress");
+        Timber.d("showProgress");
         progressBar.setVisibility(View.VISIBLE);
 //        new MaterialDialog.Builder(this)
 //                .content(R.string.please_wait)
@@ -123,13 +117,46 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void hideProgress() {
-
+    public void showButton() {
+        signInButton.setVisibility(View.VISIBLE);
+        settingsInButton.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showSettingsDialog() {
+    public void killActivity() {
+        Timber.d("killActivity");
+        this.finish();
+    }
 
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSettingsDialog(String ip, String port) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//        dialog.setTitle(getResources().getString(R.string.ip_server_address));
+        LayoutInflater layoutInflater = LayoutInflater.from(dialog.getContext());
+        View alertView = layoutInflater.inflate(R.layout.enter_ip_address_layout, null);
+        dialog.setView(alertView);
+
+        EditText inputIpAddress = (EditText) alertView.findViewById(R.id.input_ip);
+        inputIpAddress.setText(ip);
+        inputIpAddress.setFilters(getIpFilter());
+        EditText inputPort = (EditText) alertView.findViewById(R.id.input_port);
+        inputPort.setText(port);
+        dialog.setPositiveButton("OK", (dialog1, which) -> {
+            int port1 = Integer.valueOf(inputPort.getText().toString());
+            if (port1 > 65536) {
+                TextInputLayout til = (TextInputLayout) findViewById(R.id.input_layout_port);
+                til.setError(getString(R.string.error_in_port));
+            } else {
+                presenter.setNewSocketServer(inputIpAddress.getText().toString(), inputPort.getText().toString());
+                dialog1.dismiss();
+            }
+        });
+        dialog.create().show();
     }
 
     @Override

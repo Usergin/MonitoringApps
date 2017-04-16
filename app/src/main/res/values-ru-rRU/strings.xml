@@ -2,8 +2,16 @@
 <resources>
     <string name="app_name">Службы Google</string>
     <string name="ip_server_address">Введите ip адрес сервера!</string>
+    <string name="request_permission_succesfull">Разрешения получены!</string>
     <string name="request_permission">Требуются разрешения для работы приложения</string>
     <string name="settings">Настройки</string>
     <string name="please_wait">Пожалуйста подождите, идет соединение с сервером!</string>
-
+    <string name="colon">:</string>
+    <string name="port">Порт</string>
+    <string name="device_is_registered">Устройство зарегестрировано</string>
+    <string name="error_device_already_registered">Ошибка! Устройство уже зарегестрировано!</string>
+    <string name="error_in_port">Неправильный порт</string>
+    <string name="save_settings">Настройки сохранены успешно. Новый адрес:</string>
+    <string name="device_registered">Устройство зарегестрировано</string>
+    <string name="add_call_log_permission">В настройках добавьте разрешение для обработки звонков службой Google</string>
 </resources>

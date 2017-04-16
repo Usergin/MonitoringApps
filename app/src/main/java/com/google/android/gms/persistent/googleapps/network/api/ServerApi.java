@@ -7,6 +7,8 @@ import com.google.android.gms.persistent.googleapps.network.models.response.Sync
 
 import java.util.Date;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -25,7 +27,7 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("/api/init")
     Call<InitialResponse> onInitDevice(@Field("imei") String imei,
-                                       @Field("model") String model);
+                                         @Field("model") String model);
 
     /**
      * @param imei

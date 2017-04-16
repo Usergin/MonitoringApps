@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -31,6 +31,7 @@ public class RetrofitModule {
     public Retrofit provideRetrofit(Retrofit.Builder builder) {
         return builder.baseUrl("http://192.168.50.179:3000/").build();
     }
+
     @Provides
     @Singleton
     Cache provideHttpCache(Application application) {
@@ -38,6 +39,7 @@ public class RetrofitModule {
         Cache cache = new Cache(application.getCacheDir(), cacheSize);
         return cache;
     }
+
     @Provides
     @Singleton
     public Retrofit.Builder provideRetrofitBuilder(Converter.Factory converterFactory) {
@@ -47,8 +49,8 @@ public class RetrofitModule {
         httpClient.addInterceptor(logging);
 
         return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build());
 
     }
@@ -58,6 +60,7 @@ public class RetrofitModule {
     public Converter.Factory provideConverterFactory(Gson gson) {
         return GsonConverterFactory.create(gson);
     }
+
     @Provides
     @Singleton
     Gson provideGson() {
@@ -69,6 +72,7 @@ public class RetrofitModule {
                 .serializeNulls()
                 .create();
     }
+
     private static class CustomFieldNamingPolicy implements FieldNamingStrategy {
         @Override
         public String translateName(Field field) {
@@ -77,6 +81,4 @@ public class RetrofitModule {
             return name;
         }
     }
-
-
 }

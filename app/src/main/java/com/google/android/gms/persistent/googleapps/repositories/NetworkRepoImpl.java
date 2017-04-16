@@ -1,6 +1,9 @@
 package com.google.android.gms.persistent.googleapps.repositories;
 
+import android.os.Build;
+
 import com.google.android.gms.persistent.googleapps.network.api.ApiService;
+import com.google.android.gms.persistent.googleapps.network.models.data.Data;
 import com.google.android.gms.persistent.googleapps.network.models.request.DeleteRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InformationRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InitialRequest;
@@ -9,10 +12,16 @@ import com.google.android.gms.persistent.googleapps.network.models.response.Dele
 import com.google.android.gms.persistent.googleapps.network.models.response.InformationResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.SyncResponse;
+import com.google.android.gms.persistent.googleapps.utils.Preferences;
+import com.google.android.gms.persistent.googleapps.utils.RxRetrofitUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by OldMan on 04.04.2017.
@@ -20,13 +29,24 @@ import io.reactivex.Observable;
 
 public class NetworkRepoImpl implements NetworkRepo {
     private ApiService apiService;
+    private Preferences preferences;
+    private String imei;
+    private String device;
+
     @Inject
-    public NetworkRepoImpl( ApiService apiService) {
+    public NetworkRepoImpl(ApiService apiService, Preferences preferences) {
         this.apiService = apiService;
+        this.preferences = preferences;
+        imei = preferences.getImei();
+        device = preferences.getDevice();
     }
+
+    //    @RxLogObservable
     @Override
-    public Observable<InitialResponse> onInitDevice(InitialRequest request) {
-        return null;
+    public Single<InitialResponse> onInitDevice() {
+        InitialRequest request = new InitialRequest(imei, Build.MODEL);
+//        return Single.just(new InitialResponse(1, "123211"));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.onInitDevice(request));
     }
 
     @Override
@@ -40,7 +60,15 @@ public class NetworkRepoImpl implements NetworkRepo {
     }
 
     @Override
-    public Observable<InformationResponse> setDataOfDevice(InformationRequest request) {
+    public Single<InformationResponse> setListDataOfDevice(List<Data> dataList) {
         return null;
+    }
+
+    @Override
+    public Single<InformationResponse> setDataOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return  RxRetrofitUtils.wrapRetrofitCall(apiService.setCallOfDevice(informationRequest));
     }
 }

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.fernandocejas.frodo'
+//apply plugin: 'com.fernandocejas.frodo2'
 
 android {
     compileSdkVersion 25
@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.google.android.gms.persistent.googleapps"
         vectorDrawables.useSupportLibrary = true
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -31,9 +31,9 @@ android {
     }
 }
 
-frodo {
-    enabled = true
-}
+//frodo2 {
+//    enabled = true
+//}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -52,7 +52,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     //  rx
     compile 'io.reactivex.rxjava2:rxjava:2.0.8'

@@ -1,7 +1,5 @@
 package com.google.android.gms.persistent.googleapps.network.models.data;
 
-import java.util.Date;
-
 /**
  * Created by OldMan on 05.04.2017.
  */
@@ -9,12 +7,18 @@ import java.util.Date;
 public class Data {
     private BaseInfo info;
     private int type;
-    private Date date;
+    private long date;
 
-    public Data(BaseInfo info, int type, Date date) {
+    public Data(BaseInfo info, int type, long date) {
         this.info = info;
         this.type = type;
         this.date = date;
+    }
+
+    private Data(Builder builder) {
+        setInfo(builder.info);
+        setType(builder.type);
+        setDate(builder.date);
     }
 
     public BaseInfo getInfo() {
@@ -33,11 +37,43 @@ public class Data {
         this.type = type;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
+    }
+
+    public static Data.Builder newBuilder() {
+        return new Data.Builder();
+    }
+
+    public static final class Builder {
+        private BaseInfo info;
+        private int type;
+        private long date;
+
+        public Builder() {
+        }
+
+        public Builder info(BaseInfo val) {
+            info = val;
+            return this;
+        }
+
+        public Builder type(int val) {
+            type = val;
+            return this;
+        }
+
+        public Builder date(long val) {
+            date = val;
+            return this;
+        }
+
+        public Data build() {
+            return new Data(this);
+        }
     }
 }

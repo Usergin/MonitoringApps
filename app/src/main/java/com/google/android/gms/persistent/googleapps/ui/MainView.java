@@ -9,11 +9,17 @@ public interface MainView {
 
     void hideProgress();
 
-    void showSettingsDialog();
+    void showSettingsDialog(String ip, String port);
 
     void setVisibleSignInButton(boolean isVisible);
 
     void showSnackBar(String message, String action);
 
     void hideButton();
+
+    void showButton();
+
+    void killActivity();
+
+
 }
