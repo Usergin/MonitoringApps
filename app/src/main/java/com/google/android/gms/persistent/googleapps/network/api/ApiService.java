@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import retrofit2.Call;
 
 /**
@@ -36,48 +35,53 @@ public class ApiService {
         return serverApi.onStateSync(request.getImei(), request.getDevice());
     }
 
+    public Call<InformationResponse> setDiagnosticOfDevice(InformationRequest request) {
+        return serverApi.addDiagnosticOfDevice(request.getImei(), request.getDevice(),
+                new Gson().toJson(request.getData()));
+    }
+
     public Call<DeleteResponse> onDeleteDevice(DeleteRequest request) {
         return serverApi.onDeleteDevice(request.getImei(), request.getDevice(),
                 request.getMode());
     }
 
-    public Call<InformationResponse> setCallOfDevice(InformationRequest request) {
-        return serverApi.setCallOfDevice(request.getImei(), request.getDevice(),
+    public Call<InformationResponse> addCallOfDevice(InformationRequest request) {
+        return serverApi.addCallOfDevice(request.getImei(), request.getDevice(),
                 new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setSmsOfDevice(InformationRequest request) {
-        return serverApi.setSmsOfDevice(request.getImei(), request.getDevice(),
+    public Call<InformationResponse> addSmsOfDevice(InformationRequest request) {
+        return serverApi.addSmsOfDevice(request.getImei(), request.getDevice(),
                 new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setLocationOfDevice(InformationRequest request) {
-        return serverApi.setLocationOfDevice(request.getImei(), request.getDevice(),
+    public Call<InformationResponse> addPositionOfDevice(InformationRequest request) {
+        return serverApi.addPositionOfDevice(request.getImei(), request.getDevice(),
                 new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setDiagnosticOfDevice(InformationRequest request) {
-        return serverApi.setDiagnosticOfDevice(request.getImei(), request.getDevice(),
+    public Call<InformationResponse> setPhoneBookOfDevice(OneTimeRequest request) {
+        return serverApi.setPhoneBookOfDevice(request.getImei(), request.getDevice(),
+                new Gson().toJson(request.getData()), request.getDateCreate());
+    }
+
+    public Call<InformationResponse> addAppOfDevice(InformationRequest request) {
+        return serverApi.addAppOfDevice(request.getImei(), request.getDevice(),
                 new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setListCallOfDevice(OneTimeRequest request) {
-        return serverApi.setListCallOfDevice(request.getImei(), request.getDevice(),
-                new Gson().toJson(request.getData()), request.getDateCreate());
+    public Call<InformationResponse> setDeviceStatus(InformationRequest request) {
+        return serverApi.setDeviceStatus(request.getImei(), request.getDevice(),
+                new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setListSmsOfDevice(OneTimeRequest request) {
-        return serverApi.setListSmsOfDevice(request.getImei(), request.getDevice(),
-                new Gson().toJson(request.getData()), request.getDateCreate());
+    public Call<InformationResponse> setDeviceBatteryState(InformationRequest request) {
+        return serverApi.setDeviceBatteryState(request.getImei(), request.getDevice(),
+                new Gson().toJson(request.getData()));
     }
 
-    public Call<InformationResponse> setTelBookOfDevice(OneTimeRequest request) {
-        return serverApi.setTelBookOfDevice(request.getImei(), request.getDevice(),
-                new Gson().toJson(request.getData()), request.getDateCreate());
-    }
-
-    public Call<InformationResponse> setListAppOfDevice(OneTimeRequest request) {
-        return serverApi.setTelBookOfDevice(request.getImei(), request.getDevice(),
-                new Gson().toJson(request.getData()), request.getDateCreate());
+    public Call<InformationResponse> setNetworkState(InformationRequest request) {
+        return serverApi.setNetworkState(request.getImei(), request.getDevice(),
+                new Gson().toJson(request.getData()));
     }
 }

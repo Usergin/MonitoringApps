@@ -7,6 +7,7 @@ import com.google.android.gms.persistent.googleapps.network.models.data.Data;
 import com.google.android.gms.persistent.googleapps.network.models.request.DeleteRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InformationRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InitialRequest;
+import com.google.android.gms.persistent.googleapps.network.models.request.OneTimeRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.SyncRequest;
 import com.google.android.gms.persistent.googleapps.network.models.response.DeleteResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.InformationResponse;
@@ -20,7 +21,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**
@@ -50,13 +50,13 @@ public class NetworkRepoImpl implements NetworkRepo {
     }
 
     @Override
-    public Observable<SyncResponse> onStateSync(SyncRequest request) {
-        return null;
+    public Single<SyncResponse> onStateSync(SyncRequest request) {
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.onStateSync(request));
     }
 
     @Override
-    public Observable<DeleteResponse> onDeleteDevice(DeleteRequest request) {
-        return null;
+    public Single<DeleteResponse> onDeleteDevice(DeleteRequest request) {
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.onDeleteDevice(request));
     }
 
     @Override
@@ -69,6 +69,97 @@ public class NetworkRepoImpl implements NetworkRepo {
         List<Data> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(list, imei, device);
-        return  RxRetrofitUtils.wrapRetrofitCall(apiService.setCallOfDevice(informationRequest));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCallOfDevice(informationRequest));
     }
+
+    @Override
+    public Single<InformationResponse> addPositionOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addPositionOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addCallOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCallOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addSMSOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSmsOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addCallListOfDevice(List<Data> dataList) {
+        InformationRequest informationRequest = new InformationRequest(dataList, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCallOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addSMSListOfDevice(List<Data> dataList) {
+        InformationRequest informationRequest = new InformationRequest(dataList, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSmsOfDevice(informationRequest));
+
+    }
+
+    @Override
+    public Single<InformationResponse> addDiagnosticOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setDiagnosticOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> setPhoneBookOfDevice(List<Data> dataList, long date) {
+        OneTimeRequest informationRequest = new OneTimeRequest(dataList, imei, device, date);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setPhoneBookOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addListAppOfDevice(List<Data> dataList) {
+        InformationRequest informationRequest = new InformationRequest(dataList, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addAppOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addAppOfDevice(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addAppOfDevice(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addDeviceStatus(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setDeviceStatus(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addDeviceBatteryState(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setDeviceBatteryState(informationRequest));
+    }
+
+    @Override
+    public Single<InformationResponse> addNetworkState(Data data) {
+        List<Data> list = new ArrayList<>();
+        list.add(data);
+        InformationRequest informationRequest = new InformationRequest(list, imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setNetworkState(informationRequest));
+    }
+
+
 }

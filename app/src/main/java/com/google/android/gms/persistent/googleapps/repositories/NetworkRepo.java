@@ -22,11 +22,37 @@ public interface NetworkRepo {
 
     Single<InitialResponse> onInitDevice();
 
-    Observable<SyncResponse> onStateSync(SyncRequest request);
+    Single<SyncResponse> onStateSync(SyncRequest request);
 
-    Observable<DeleteResponse> onDeleteDevice(DeleteRequest request);
+    Single<InformationResponse> addDiagnosticOfDevice(Data data);
+
+    Single<DeleteResponse> onDeleteDevice(DeleteRequest request);
 
     Single<InformationResponse> setListDataOfDevice(List<Data> dataList);
 
-    Single<InformationResponse> setDataOfDevice(Data dataList);
+    Single<InformationResponse> setDataOfDevice(Data data);
+
+    Single<InformationResponse> addPositionOfDevice(Data data);
+
+    Single<InformationResponse> addCallOfDevice(Data data);
+
+    Single<InformationResponse> addSMSOfDevice(Data data);
+
+    Single<InformationResponse> addCallListOfDevice(List<Data> dataList);
+
+    Single<InformationResponse> addSMSListOfDevice(List<Data> dataList);
+
+
+
+    Single<InformationResponse> setPhoneBookOfDevice(List<Data> dataList,long date);
+
+    Single<InformationResponse> addListAppOfDevice(List<Data> dataList);
+
+    Single<InformationResponse> addAppOfDevice(Data data);
+
+    Single<InformationResponse> addDeviceStatus(Data data);
+
+    Single<InformationResponse> addDeviceBatteryState(Data data);
+
+    Single<InformationResponse> addNetworkState(Data data);
 }

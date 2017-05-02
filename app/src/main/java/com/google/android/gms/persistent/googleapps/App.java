@@ -13,6 +13,7 @@ import com.google.android.gms.persistent.googleapps.di.modules.AppModule;
 public class App extends Application {
     private static AppComponent appComponent;
     private static App context;
+    private static boolean isScreenOn;
 
     @Override
     public void onCreate() {
@@ -36,5 +37,13 @@ public class App extends Application {
                 .appModule(new AppModule(context))
                 .build();
         return appComponent;
+    }
+
+    public static boolean isScreenOn() {
+        return isScreenOn;
+    }
+
+    public static void setIsScreenOn(boolean isScreenOn) {
+        App.isScreenOn = isScreenOn;
     }
 }

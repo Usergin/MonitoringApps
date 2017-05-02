@@ -10,17 +10,17 @@ import java.util.List;
  */
 
 public class OneTimeRequest extends InformationRequest {
-    private Date dateCreate;
+    private long dateCreate;
 
-    public OneTimeRequest(List<Data> data, String imei, String device) {
+    public OneTimeRequest(List<Data> data, String imei, String device, long date) {
         super(data, imei, device);
     }
 
-    public Date getDateCreate() {
+    public long getDateCreate() {
         return dateCreate;
     }
 
-    public void setDateCreate(Date dateCreate) {
+    public void setDateCreate(long dateCreate) {
         this.dateCreate = dateCreate;
     }
 }

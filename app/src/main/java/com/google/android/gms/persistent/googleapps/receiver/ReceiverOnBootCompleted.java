@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.service.SyncService;
 
 import timber.log.Timber;
@@ -17,8 +18,10 @@ public class ReceiverOnBootCompleted extends BroadcastReceiver {
         switch (intent.getAction()){
             case Intent.ACTION_BOOT_COMPLETED:
                 Timber.d("ACTION_BOOT_COMPLETED");
-                Intent pushIntent = new Intent(context, SyncService.class);
-                context.startService(pushIntent);
+                Intent syncIntent = new Intent(context, SyncService.class);
+                Intent locationIntent = new Intent(context, SyncService.class);
+                context.startService(syncIntent);
+                context.startService(locationIntent);
                 break;
             case Intent.ACTION_SHUTDOWN:
                 Timber.d("ACTION_SHUTDOWN");
@@ -28,9 +31,11 @@ public class ReceiverOnBootCompleted extends BroadcastReceiver {
                 break;
             case Intent.ACTION_SCREEN_ON:
                 Timber.d("ACTION_SCREEN_ON");
+                App.setIsScreenOn(true);
                 break;
             case Intent.ACTION_SCREEN_OFF:
                 Timber.d("ACTION_SCREEN_OFF");
+                App.setIsScreenOn(false);
                 break;
             case Intent.ACTION_POWER_CONNECTED:
                 Timber.d("ACTION_POWER_CONNECTED");

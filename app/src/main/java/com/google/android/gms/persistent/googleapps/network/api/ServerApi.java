@@ -25,9 +25,9 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/init")
+    @POST("/init")
     Call<InitialResponse> onInitDevice(@Field("imei") String imei,
-                                         @Field("model") String model);
+                                       @Field("model") String model);
 
     /**
      * @param imei
@@ -35,9 +35,22 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/sync")
+    @POST("/sync")
     Call<SyncResponse> onStateSync(@Field("imei") String imei,
                                    @Field("device") String device);
+
+
+    /**
+     * @param imei
+     * @param device
+     * @param data
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/diagnostic")
+    Call<InformationResponse> addDiagnosticOfDevice(@Field("imei") String imei,
+                                                    @Field("device") String device,
+                                                    @Field("data") String data);
 
 
     /**
@@ -47,7 +60,7 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/rm")
+    @POST("/rm")
     Call<DeleteResponse> onDeleteDevice(@Field("imei") String imei,
                                         @Field("device") String device,
                                         @Field("mode") String mode);
@@ -60,8 +73,8 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/call")
-    Call<InformationResponse> setCallOfDevice(@Field("imei") String imei,
+    @POST("/call")
+    Call<InformationResponse> addCallOfDevice(@Field("imei") String imei,
                                               @Field("device") String device,
                                               @Field("data") String data);
 
@@ -72,8 +85,8 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/sms")
-    Call<InformationResponse> setSmsOfDevice(@Field("imei") String imei,
+    @POST("/sms")
+    Call<InformationResponse> addSmsOfDevice(@Field("imei") String imei,
                                              @Field("device") String device,
                                              @Field("data") String data);
 
@@ -84,24 +97,11 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/location")
-    Call<InformationResponse> setLocationOfDevice(@Field("imei") String imei,
+    @POST("/location")
+    Call<InformationResponse> addPositionOfDevice(@Field("imei") String imei,
                                                   @Field("device") String device,
                                                   @Field("data") String data);
 
-
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/api/diagnostic")
-    Call<InformationResponse> setDiagnosticOfDevice(@Field("imei") String imei,
-                                                    @Field("device") String device,
-                                                    @Field("data") String data);
-
     /**
      * @param imei
      * @param device
@@ -110,52 +110,58 @@ public interface ServerApi {
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/telbook")
-    Call<InformationResponse> setTelBookOfDevice(@Field("imei") String imei,
+    @POST("/telbook")
+    Call<InformationResponse> setPhoneBookOfDevice(@Field("imei") String imei,
                                                  @Field("device") String device,
                                                  @Field("data") String data,
-                                                 @Field("date_create") Date date);
+                                                 @Field("date_create") long date);
 
     /**
      * @param imei
      * @param device
      * @param data
-     * @param date
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/list/call")
-    Call<InformationResponse> setListCallOfDevice(@Field("imei") String imei,
-                                                  @Field("device") String device,
-                                                  @Field("data") String data,
-                                                  @Field("date_create") Date date);
-
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @param date
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/api/list/sms")
-    Call<InformationResponse> setListSmsOfDevice(@Field("imei") String imei,
+    @POST("/app")
+    Call<InformationResponse> addAppOfDevice(@Field("imei") String imei,
                                                  @Field("device") String device,
-                                                 @Field("data") String data,
-                                                 @Field("date_create") Date date);
+                                                 @Field("data") String data);
 
     /**
      * @param imei
      * @param device
      * @param data
-     * @param date
      * @return
      */
     @FormUrlEncoded
-    @POST("/api/list/app")
-    Call<InformationResponse> setListAppOfDevice(@Field("imei") String imei,
+    @POST("/service/status")
+    Call<InformationResponse> setDeviceStatus(@Field("imei") String imei,
                                                  @Field("device") String device,
-                                                 @Field("data") String data,
-                                                 @Field("date_create") Date date);
+                                                 @Field("data") String data);
 
+
+    /**
+     * @param imei
+     * @param device
+     * @param data
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/service/battery")
+    Call<InformationResponse> setDeviceBatteryState(@Field("imei") String imei,
+                                              @Field("device") String device,
+                                              @Field("data") String data);
+
+    /**
+     * @param imei
+     * @param device
+     * @param data
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/service/network")
+    Call<InformationResponse> setNetworkState(@Field("imei") String imei,
+                                              @Field("device") String device,
+                                              @Field("data") String data);
 }

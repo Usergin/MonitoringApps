@@ -80,7 +80,7 @@ public class ReceiverOnCall extends BroadcastReceiver {
             Call call = new Call(phNumber, callDuration, callDate);
 
             App.getAppComponent().getNetworkRepo()
-                    .setDataOfDevice(Data.newBuilder().info(call)
+                    .addCallOfDevice(Data.newBuilder().info(call)
                             .type(type)
                             .date(callDate)
                             .build());

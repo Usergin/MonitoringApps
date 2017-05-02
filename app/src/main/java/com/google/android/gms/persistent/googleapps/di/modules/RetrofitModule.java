@@ -29,7 +29,7 @@ public class RetrofitModule {
     @Provides
     @Singleton
     public Retrofit provideRetrofit(Retrofit.Builder builder) {
-        return builder.baseUrl("http://192.168.50.179:3000/").build();
+        return builder.baseUrl("http://192.168.50.179:3000/api/").build();
     }
 
     @Provides
