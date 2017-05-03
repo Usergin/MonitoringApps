@@ -49,7 +49,7 @@ public class ReceiverOnSms extends BroadcastReceiver {
                     long date = messages[0].getTimestampMillis();
                     SMS sms = new SMS(phoneNumber,bodyText.toString(), date);
                     App.getAppComponent().getNetworkRepo()
-                            .setDataOfDevice(Data.newBuilder().info(sms)
+                            .addSMSOfDevice(Data.newBuilder().info(sms)
                                     .type(Constants.INCOMING_SMS)
                                     .date(date)
                                     .build());

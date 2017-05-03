@@ -45,13 +45,13 @@ public class NetworkRepoImpl implements NetworkRepo {
     @Override
     public Single<InitialResponse> onInitDevice() {
         InitialRequest request = new InitialRequest(imei, Build.MODEL);
-//        return Single.just(new InitialResponse(1, "123211"));
         return RxRetrofitUtils.wrapRetrofitCall(apiService.onInitDevice(request));
     }
 
     @Override
-    public Single<SyncResponse> onStateSync(SyncRequest request) {
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.onStateSync(request));
+    public Single<SyncResponse> onStateSync() {
+        SyncRequest syncRequest = new SyncRequest(imei, device);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.onStateSync(syncRequest));
     }
 
     @Override

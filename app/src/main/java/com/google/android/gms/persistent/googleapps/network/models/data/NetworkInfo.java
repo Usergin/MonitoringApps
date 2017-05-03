@@ -5,7 +5,7 @@ package com.google.android.gms.persistent.googleapps.network.models.data;
  */
 
 public class NetworkInfo {
-    private String is_dual_sim;
+    private boolean is_dual_sim;
     private String imei_sim1;
     private String imei_sim2;
     private String mcc;
@@ -29,11 +29,11 @@ public class NetworkInfo {
         setNetwork(builder.network);
         setOperatorName(builder.operator_name);
     }
-    public String getIsDualSim() {
+    public boolean getIsDualSim() {
         return is_dual_sim;
     }
 
-    public void setIsDualSim(String is_dual_sim) {
+    public void setIsDualSim(boolean is_dual_sim) {
         this.is_dual_sim = is_dual_sim;
     }
 
@@ -103,7 +103,7 @@ public class NetworkInfo {
 
 
     public static final class Builder {
-        private String is_dual_sim;
+        private boolean is_dual_sim;
         private String imei_sim1;
         private String imei_sim2;
         private String mcc;
@@ -115,7 +115,7 @@ public class NetworkInfo {
 
         private Builder() {}
 
-        public NetworkInfo.Builder isDualSim(String val) {
+        public NetworkInfo.Builder isDualSim(boolean val) {
             is_dual_sim = val;
             return this;
         }

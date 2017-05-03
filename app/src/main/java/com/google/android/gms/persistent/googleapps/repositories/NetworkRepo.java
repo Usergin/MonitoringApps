@@ -22,7 +22,7 @@ public interface NetworkRepo {
 
     Single<InitialResponse> onInitDevice();
 
-    Single<SyncResponse> onStateSync(SyncRequest request);
+    Single<SyncResponse> onStateSync();
 
     Single<InformationResponse> addDiagnosticOfDevice(Data data);
 

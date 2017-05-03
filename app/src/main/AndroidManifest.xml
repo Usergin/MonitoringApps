@@ -24,7 +24,7 @@
     <!-- For sending/receiving events -->
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <!-- For sending location tiles in the future -->
+    <!-- For sending geo tiles in the future -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -60,14 +60,14 @@
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <!-- <action android:name="android.intent.action.ACTION_SHUTDOWN"/> -->
-                <!-- <action android:name="android.intent.action.AIRPLANE_MODE"/> -->
+                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+                 <action android:name="android.intent.action.AIRPLANE_MODE"/>
                  <action android:name="android.intent.action.SCREEN_ON"/>
                  <action android:name="android.intent.action.SCREEN_OFF"/>
-                <!-- <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/> -->
-                <!-- <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/> -->
-                <!-- <action android:name="android.intent.action.ACTION_BATTERY_LOW"/> -->
-                <!-- <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/> -->
+                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                 <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+                 <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
             </intent-filter>
         </receiver>
         <receiver

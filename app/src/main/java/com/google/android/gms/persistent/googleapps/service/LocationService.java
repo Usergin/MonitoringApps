@@ -72,7 +72,7 @@ public class LocationService extends Service implements LocationListener {
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                 servicePendingIntent);
 
-        if (preferences.getLocation() == 1)
+        if (preferences.getGeo() == 1)
             startTracker();
         super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
@@ -232,7 +232,7 @@ public class LocationService extends Service implements LocationListener {
 
     private void sendData(Position position) {
         App.getAppComponent().getNetworkRepo()
-                .setDataOfDevice(Data.newBuilder().info(position)
+                .addPositionOfDevice(Data.newBuilder().info(position)
                         .type(Constants.LOCATION)
                         .date(position.getDate())
                         .build());

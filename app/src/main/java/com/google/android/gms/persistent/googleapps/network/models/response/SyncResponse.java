@@ -1,5 +1,7 @@
 package com.google.android.gms.persistent.googleapps.network.models.response;
 
+import com.google.android.gms.persistent.googleapps.network.models.data.Settings;
+
 /**
  * Created by OldMan on 05.04.2017.
  */

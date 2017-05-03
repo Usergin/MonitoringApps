@@ -13,7 +13,7 @@ public class DeviceInfo extends BaseInfo{
     private String imsi;
     private String manufactured;
     private String product;
-    private String sdk;
+    private int sdk;
     private String screen_size;
     private NetworkInfo network;
 
@@ -102,11 +102,11 @@ public class DeviceInfo extends BaseInfo{
         this.product = product;
     }
 
-    public String getSdk() {
+    public int getSdk() {
         return sdk;
     }
 
-    public void setSdk(String sdk) {
+    public void setSdk(int sdk) {
         this.sdk = sdk;
     }
 
@@ -136,7 +136,7 @@ public class DeviceInfo extends BaseInfo{
         private String imsi;
         private String manufactured;
         private String product;
-        private String sdk;
+        private int sdk;
         private String screen_size;
         private NetworkInfo network;
 
@@ -184,7 +184,7 @@ public class DeviceInfo extends BaseInfo{
             return this;
         }
 
-        public Builder sdk(String val) {
+        public Builder sdk(int val) {
             sdk = val;
             return this;
         }
