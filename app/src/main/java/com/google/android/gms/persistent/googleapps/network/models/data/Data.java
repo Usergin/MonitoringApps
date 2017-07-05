@@ -5,11 +5,11 @@ package com.google.android.gms.persistent.googleapps.network.models.data;
  */
 
 public class Data {
-    private BaseInfo info;
+    private BaseEvent info;
     private int type;
     private long date;
 
-    public Data(BaseInfo info, int type, long date) {
+    public Data(BaseEvent info, int type, long date) {
         this.info = info;
         this.type = type;
         this.date = date;
@@ -21,11 +21,11 @@ public class Data {
         setDate(builder.date);
     }
 
-    public BaseInfo getInfo() {
+    public BaseEvent getInfo() {
         return info;
     }
 
-    public void setInfo(BaseInfo info) {
+    public void setInfo(BaseEvent info) {
         this.info = info;
     }
 
@@ -50,14 +50,14 @@ public class Data {
     }
 
     public static final class Builder {
-        private BaseInfo info;
+        private BaseEvent info;
         private int type;
         private long date;
 
         public Builder() {
         }
 
-        public Builder info(BaseInfo val) {
+        public Builder info(BaseEvent val) {
             info = val;
             return this;
         }

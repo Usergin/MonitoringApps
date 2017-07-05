@@ -1,20 +1,24 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.BaseInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
+
+import java.util.Date;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class SMS extends BaseInfo {
+public class Message extends BaseEvent {
     private String number;
     private String data;
-    private long date;
+    private Date date;
+    private int type;
 
-    public SMS(String number, String data, long date) {
+    public Message(String number, String data, Date date, int type) {
         this.number = number;
         this.data = data;
         this.date = date;
+        this.type = type;
     }
 
     public String getNumber() {
@@ -33,11 +37,19 @@ public class SMS extends BaseInfo {
         this.data = data;
     }
 
-    public long getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

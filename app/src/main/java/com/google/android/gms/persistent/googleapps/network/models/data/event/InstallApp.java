@@ -1,4 +1,6 @@
-package com.google.android.gms.persistent.googleapps.network.models.data;
+package com.google.android.gms.persistent.googleapps.network.models.data.event;
+
+import java.util.Date;
 
 /**
  * Created by OldMan on 05.04.2017.
@@ -7,10 +9,19 @@ package com.google.android.gms.persistent.googleapps.network.models.data;
 public class InstallApp {
     private String name;
     private String info;
+    private Date date;
 
-    public InstallApp(String name, String info) {
+    public InstallApp(String name, String info, Date date) {
         this.name = name;
         this.info = info;
+        this.date = date;
+    }
+
+    public Date getDate() {return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getName() {

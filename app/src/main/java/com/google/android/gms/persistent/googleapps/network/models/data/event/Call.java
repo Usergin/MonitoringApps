@@ -1,20 +1,33 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.BaseInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class Call extends BaseInfo {
+public class Call extends BaseEvent {
     private String number;
-    private String duration;
+    private int duration;
     private long date;
+    private int type;
 
-    public Call(String number, String duration, long date) {
+    public Call(String number, int duration, long date, int type) {
         this.number = number;
         this.duration = duration;
         this.date = date;
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getNumber() {
@@ -25,15 +38,19 @@ public class Call extends BaseInfo {
         this.number = number;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public long getDate() {return date;}
+    public long getDate() {
+        return date;
+    }
 
-    public void setDate(long date) {this.date = date;}
+    public void setDate(long date) {
+        this.date = date;
+    }
 }

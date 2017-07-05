@@ -1,6 +1,8 @@
 package com.google.android.gms.persistent.googleapps.repositories;
 
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
+import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
 import com.google.android.gms.persistent.googleapps.network.models.request.DeleteRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.InformationRequest;
 import com.google.android.gms.persistent.googleapps.network.models.request.SyncRequest;
@@ -24,35 +26,35 @@ public interface NetworkRepo {
 
     Single<SyncResponse> onStateSync();
 
-    Single<InformationResponse> addDiagnosticOfDevice(Data data);
+    Single<InformationResponse> addDiagnosticOfDevice(BaseEvent data);
 
     Single<DeleteResponse> onDeleteDevice(DeleteRequest request);
 
-    Single<InformationResponse> setListDataOfDevice(List<Data> dataList);
+    Single<InformationResponse> setListDataOfDevice(List<BaseEvent> dataList);
 
-    Single<InformationResponse> setDataOfDevice(Data data);
+    Single<InformationResponse> setDataInfo(DeviceInfo data);
 
-    Single<InformationResponse> addPositionOfDevice(Data data);
+    Single<InformationResponse> addPositionOfDevice(BaseEvent data);
 
-    Single<InformationResponse> addCallOfDevice(Data data);
+    Single<InformationResponse> addCallOfDevice(BaseEvent data);
 
-    Single<InformationResponse> addSMSOfDevice(Data data);
+    Single<InformationResponse> addSMSOfDevice(BaseEvent data);
 
-    Single<InformationResponse> addCallListOfDevice(List<Data> dataList);
+    Single<InformationResponse> addCallListOfDevice(List<BaseEvent> dataList);
 
-    Single<InformationResponse> addSMSListOfDevice(List<Data> dataList);
+    Single<InformationResponse> addSMSListOfDevice(List<BaseEvent> dataList);
 
 
 
-    Single<InformationResponse> setPhoneBookOfDevice(List<Data> dataList,long date);
+    Single<InformationResponse> setPhoneBookOfDevice(List<BaseEvent> dataList,long date);
 
-    Single<InformationResponse> addListAppOfDevice(List<Data> dataList);
+    Single<InformationResponse> addListAppOfDevice(List<BaseEvent> dataList);
 
-    Single<InformationResponse> addAppOfDevice(Data data);
+    Single<InformationResponse> addAppOfDevice(BaseEvent data);
 
-    Single<InformationResponse> addDeviceStatus(Data data);
+    Single<InformationResponse> addDeviceStatus(BaseEvent data);
 
-    Single<InformationResponse> addDeviceBatteryState(Data data);
+    Single<InformationResponse> addDeviceBatteryState(BaseEvent data);
 
-    Single<InformationResponse> addNetworkState(Data data);
+    Single<InformationResponse> addNetworkState(BaseEvent data);
 }

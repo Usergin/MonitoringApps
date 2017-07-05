@@ -1,20 +1,28 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
+import java.util.Date;
+
 /**
- * Created by OldMan on 05.04.2017.
+ * Created by oldman on 05.07.17.
  */
 
-public class ChargingEvent extends BaseEvent {
+public class BatteryEvent extends BaseEvent {
+
     private String level;
     private String status;
     private String battery_status;
     private String type_charging;
+    private Date date;
 
-    public ChargingEvent(String level, String status, String battery_status, String type_charging) {
+    public BatteryEvent() {
+    }
+
+    public BatteryEvent(String level, String status, String battery_status, String type_charging, Date date) {
         this.level = level;
         this.status = status;
         this.battery_status = battery_status;
         this.type_charging = type_charging;
+        this.date = date;
     }
 
     public String getLevel() {
@@ -47,5 +55,13 @@ public class ChargingEvent extends BaseEvent {
 
     public void setType_charging(String type_charging) {
         this.type_charging = type_charging;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

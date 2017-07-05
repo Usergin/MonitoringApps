@@ -1,5 +1,7 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
+import java.util.Date;
+
 /**
  * Created by OldMan on 05.04.2017.
  */
@@ -7,10 +9,12 @@ package com.google.android.gms.persistent.googleapps.network.models.data.event;
 public class NetworkEvent extends BaseEvent{
     private String state;
     private String ip;
+    private Date date;
 
-    public NetworkEvent(String state, String ip) {
+    public NetworkEvent(String state, String ip, Date date) {
         this.state = state;
         this.ip = ip;
+        this.date = date;
     }
 
     public String getState() {
@@ -27,5 +31,13 @@ public class NetworkEvent extends BaseEvent{
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

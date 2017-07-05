@@ -1,11 +1,18 @@
 package com.google.android.gms.persistent.googleapps.network.models.request;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by OldMan on 05.04.2017.
  */
 
 public class BaseRequest {
+    @SerializedName("imei")
+    @Expose
     private String imei;
+    @SerializedName("device")
+    @Expose
     private String device;
 
     public BaseRequest(String imei, String device) {

@@ -1,16 +1,14 @@
 package com.google.android.gms.persistent.googleapps.network.models.data;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent;
-
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class ServiceInfo extends BaseInfo {
+public class ServiceInfo extends BaseEvent {
     private  String area;
-    private BaseEvent event;
+    private com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event;
 
-    public ServiceInfo(String area, BaseEvent event) {
+    public ServiceInfo(String area, com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event) {
         this.area = area;
         this.event = event;
     }
@@ -23,11 +21,11 @@ public class ServiceInfo extends BaseInfo {
         this.area = area;
     }
 
-    public BaseEvent getEvent() {
+    public com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent getEvent() {
         return event;
     }
 
-    public void setEvent(BaseEvent event) {
+    public void setEvent(com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event) {
         this.event = event;
     }
 }

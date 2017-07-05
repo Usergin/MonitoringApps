@@ -1,41 +1,43 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.BaseInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
+
+import java.util.Date;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class Position extends BaseInfo {
+public class Location extends BaseEvent {
     private double longitude, latitude;
     private float accuracy;
-    private String provider;
-    private long date;
+    private Date date;
+    private String method;
 
-    public Position(double longitude, double latitude, float accuracy, long date, String provider) {
+    public Location(double longitude, double latitude, float accuracy, Date date, String method) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.accuracy = accuracy;
-        this.date = date;
+        this.method = method;
     }
 
-    private Position(Builder builder) {
+    private Location(Builder builder) {
         setLongitude(builder.longitude);
         setLatitude(builder.latitude);
         setAccuracy(builder.accuracy);
         setDate(builder.date);
     }
 
-    public static Position.Builder newBuilder() {
-        return new Position.Builder();
+    public static Location.Builder newBuilder() {
+        return new Location.Builder();
     }
 
-    public String getProvider() {
-        return provider;
+    public String getMethod() {
+        return method;
     }
 
-    public void setProvider(String provider) {
-        this.provider = provider;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public double getLongitude() {
@@ -62,11 +64,11 @@ public class Position extends BaseInfo {
         this.accuracy = accuracy;
     }
 
-    public long getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -74,8 +76,8 @@ public class Position extends BaseInfo {
         private double longitude;
         private double latitude;
         private float accuracy;
-        private long date;
-        private String provider;
+        private Date date;
+        private String method;
 
         public Builder() {
         }
@@ -95,18 +97,18 @@ public class Position extends BaseInfo {
             return this;
         }
 
-        public Builder date(long val) {
+        public Builder date(Date val) {
             date = val;
             return this;
         }
 
-        public Builder provider(String val) {
-            provider = val;
+        public Builder method(String val) {
+            method = val;
             return this;
         }
 
-        public Position build() {
-            return new Position(this);
+        public Location build() {
+            return new Location(this);
         }
 
     }

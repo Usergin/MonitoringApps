@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -16,7 +15,7 @@ import android.provider.Settings;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
-import com.google.android.gms.persistent.googleapps.network.models.data.event.Position;
+import com.google.android.gms.persistent.googleapps.network.models.data.event.Location;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
 import com.google.android.gms.persistent.googleapps.utils.Preferences;
 
@@ -123,8 +122,8 @@ public class LocationService extends Service implements LocationListener {
     }
 
     private void getLast() {
-        Location bestResult = null;
-        Location location = null;
+        android.location.Location bestResult = null;
+        android.location.Location location = null;
         double latitude = 0;
         double longitude = 0;
         String bestProvider = null;
@@ -172,7 +171,7 @@ public class LocationService extends Service implements LocationListener {
             }
 
         }
-        Position position = Position.newBuilder()
+        Location position = Location.newBuilder()
                 .longitude(longitude)
                 .latitude(latitude)
                 .accuracy(accuracy)
@@ -192,9 +191,9 @@ public class LocationService extends Service implements LocationListener {
 
     private void setGPSLocation() {
         // locMetod = "network";
-        Timber.d("GPS Position");
+        Timber.d("GPS Location");
         try {
-            Timber.d("GPS Position OK");
+            Timber.d("GPS Location OK");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     MIN_TIME_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         } catch (java.lang.SecurityException ex) {
@@ -206,7 +205,7 @@ public class LocationService extends Service implements LocationListener {
 
     public void setNetworkLocation() {
         try {
-            Timber.d("Network Position OK");
+            Timber.d("Network Location OK");
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, MIN_TIME_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
@@ -230,7 +229,7 @@ public class LocationService extends Service implements LocationListener {
 
     }
 
-    private void sendData(Position position) {
+    private void sendData(Location position) {
         App.getAppComponent().getNetworkRepo()
                 .addPositionOfDevice(Data.newBuilder().info(position)
                         .type(Constants.LOCATION)
@@ -240,7 +239,7 @@ public class LocationService extends Service implements LocationListener {
 
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(android.location.Location location) {
 
     }
 

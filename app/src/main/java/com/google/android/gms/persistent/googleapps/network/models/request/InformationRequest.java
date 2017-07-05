@@ -1,7 +1,9 @@
 package com.google.android.gms.persistent.googleapps.network.models.request;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.BaseInfo;
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -10,18 +12,18 @@ import java.util.List;
  */
 
 public class InformationRequest extends BaseRequest {
-    private List<Data> data;
+    private List<BaseEvent> data;
 
-    public InformationRequest(List<Data> data, String imei, String device) {
+    public InformationRequest(String imei, String device, List<BaseEvent> data) {
         super(imei, device);
         this.data = data;
     }
 
-    public List<Data> getData() {
+    public List<BaseEvent> getData() {
         return data;
     }
 
-    public void setData(List<Data> data) {
+    public void setData(List<BaseEvent> data) {
         this.data = data;
     }
 }
