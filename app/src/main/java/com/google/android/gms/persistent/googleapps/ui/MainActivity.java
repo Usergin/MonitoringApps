@@ -1,14 +1,11 @@
 package com.google.android.gms.persistent.googleapps.ui;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -19,8 +16,10 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
+import com.google.android.gms.persistent.googleapps.data_collection.AboutDevice;
 import com.google.android.gms.persistent.googleapps.di.view.DaggerMainComponent;
 import com.google.android.gms.persistent.googleapps.di.view.MainModule;
+import com.google.android.gms.persistent.googleapps.service.SyncService;
 
 import javax.inject.Inject;
 
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public final static int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
     @Inject
     MainPresenterImpl presenter;
+    @Inject
+    AboutDevice aboutDevice;
     @BindView(R.id.settings_in_button)
     ImageButton signInButton;
     @BindView(R.id.sign_in_button)
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     View view;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +170,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void startService() {
-
+        Intent syncIntent = new Intent(this, SyncService.class);
+        Intent locationIntent = new Intent(this, SyncService.class);
+        startService(syncIntent);
+        startService(locationIntent);
     }
 
     private View.OnClickListener snackbarOnClickListener = view1 -> onInvokePermissions();

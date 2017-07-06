@@ -468,14 +468,11 @@ public class AboutDevice {
 
     private static boolean isRooted() {
         boolean found = false;
-        if (!found) {
-            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
-            for (String where : places) {
-                if (new File(where + "su").exists()) {
-                    found = true;
-                    break;
-                }
+        String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+        for (String where : places) {
+            if (new File(where + "su").exists()) {
+                return true;
             }
         }
         return found;

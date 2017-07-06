@@ -49,6 +49,9 @@ public class ReceiverOnBootCompleted extends BroadcastReceiver {
             case Intent.ACTION_BATTERY_OKAY:
                 Timber.d("ACTION_BATTERY_OKAY");
                 break;
+            case Intent.ACTION_REBOOT:
+                Timber.d("REBOOT");
+                break;
         }
 
 //        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
