@@ -14,4 +14,5 @@
     <string name="save_settings">Настройки сохранены успешно. Новый адрес:</string>
     <string name="device_registered">Устройство зарегестрировано</string>
     <string name="add_call_log_permission">В настройках добавьте разрешение для обработки звонков службой Google</string>
+    <string name="error">"Код ошибки: "</string>
 </resources>

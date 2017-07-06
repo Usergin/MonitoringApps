@@ -26,7 +26,7 @@ public interface NetworkRepo {
 
     Single<SyncResponse> onStateSync();
 
-    Single<InformationResponse> addDiagnosticOfDevice(BaseEvent data);
+    Single<InformationResponse> setDeviceInfo(BaseEvent data);
 
     Single<DeleteResponse> onDeleteDevice(DeleteRequest request);
 

@@ -15,7 +15,7 @@ public class DeviceInfo extends BaseEvent {
     private String product;
     private String sdk;
     private String screen_size;
-    private String is_dual_sim;
+    private boolean is_dual_sim;
     private String imei_sim1;
     private String imei_sim2;
     private String mcc;
@@ -152,11 +152,11 @@ public class DeviceInfo extends BaseEvent {
     }
 
 
-    public String getIs_dual_sim() {
+    public boolean getIs_dual_sim() {
         return is_dual_sim;
     }
 
-    public void setIs_dual_sim(String is_dual_sim) {
+    public void setIs_dual_sim(boolean is_dual_sim) {
         this.is_dual_sim = is_dual_sim;
     }
 
@@ -227,7 +227,7 @@ public class DeviceInfo extends BaseEvent {
         private String product;
         private String sdk;
         private String screen_size;
-        private String is_dual_sim;
+        private boolean is_dual_sim;
         private String imei_sim1;
         private String imei_sim2;
         private String mcc;
@@ -246,7 +246,7 @@ public class DeviceInfo extends BaseEvent {
             return this;
         }
 
-        public Builder isDualSim(String val) {
+        public Builder isDualSim(boolean val) {
             is_dual_sim = val;
             return this;
         }

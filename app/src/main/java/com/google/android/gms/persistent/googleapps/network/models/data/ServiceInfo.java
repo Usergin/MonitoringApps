@@ -6,9 +6,9 @@ package com.google.android.gms.persistent.googleapps.network.models.data;
 
 public class ServiceInfo extends BaseEvent {
     private  String area;
-    private com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event;
+    private  BaseEvent event;
 
-    public ServiceInfo(String area, com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event) {
+    public ServiceInfo(String area, BaseEvent event) {
         this.area = area;
         this.event = event;
     }
@@ -21,11 +21,11 @@ public class ServiceInfo extends BaseEvent {
         this.area = area;
     }
 
-    public com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent getEvent() {
+    public BaseEvent getEvent() {
         return event;
     }
 
-    public void setEvent(com.google.android.gms.persistent.googleapps.network.models.data.event.BaseEvent event) {
+    public void setEvent(BaseEvent event) {
         this.event = event;
     }
 }

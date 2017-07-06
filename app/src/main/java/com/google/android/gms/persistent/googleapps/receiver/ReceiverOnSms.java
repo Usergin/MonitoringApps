@@ -12,11 +12,15 @@ import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
 import com.google.android.gms.persistent.googleapps.network.models.data.event.Message;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
+import com.google.android.gms.persistent.googleapps.utils.DateUtils;
+
+import java.util.Date;
 
 import timber.log.Timber;
 
 public class ReceiverOnSms extends BroadcastReceiver {
-    final SmsManager sms = SmsManager.getDefault();
+    private final int TYPE_INCOMING_CALL = Constants.INCOMING_CALL;
+    private final SmsManager sms = SmsManager.getDefault();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -45,13 +49,10 @@ public class ReceiverOnSms extends BroadcastReceiver {
                     String phoneNumber = messages[0].getDisplayOriginatingAddress();
                     String message = messages[0].getDisplayMessageBody();
                     String name = messages[0].getOriginatingAddress();
-                    long date = messages[0].getTimestampMillis();
-                    Message sms = new Message(phoneNumber,bodyText.toString(), date);
+                    Date date = new Date(messages[0].getTimestampMillis());
+                    Message sms = new Message(phoneNumber,bodyText.toString(), date, TYPE_INCOMING_CALL);
                     App.getAppComponent().getNetworkRepo()
-                            .addSMSOfDevice(Data.newBuilder().info(sms)
-                                    .type(Constants.INCOMING_SMS)
-                                    .date(date)
-                                    .build());
+                            .addSMSOfDevice(sms);
                     Toast.makeText(context, "Message " +bodyText.toString() + ", from " + phoneNumber +
                             " " + name , Toast.LENGTH_SHORT).show();
 

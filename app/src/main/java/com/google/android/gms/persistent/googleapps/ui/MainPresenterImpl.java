@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
+import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.concurrent.TimeUnit;
@@ -75,7 +76,8 @@ public class MainPresenterImpl implements MainPresenter {
             view.hideButton();
             view.showProgress();
         }
-        Disposable disposable = interactor.onRegisterDevice().subscribeOn(Schedulers.io())
+        Disposable disposable = interactor.onRegisterDevice()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleSuccess, this::handleError);
         compositeDisposable.add(disposable);
@@ -130,7 +132,6 @@ public class MainPresenterImpl implements MainPresenter {
         compositeDisposable.add(disposable);
     }
 
-    //    @RxLogObservable
     @Override
     public void setNewSocketServer(String ip, String port) {
         // combine objects...
@@ -144,11 +145,19 @@ public class MainPresenterImpl implements MainPresenter {
         compositeDisposable.add(disposable);
     }
 
-    private void handleSuccess(String s) {
+    private void handleSuccess(InitialResponse response) {
         if (view != null) {
             view.hideProgress();
-            view.showSnackBar(context.getString(R.string.device_registered), null);
-            Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+            if (response.getCode() == 1) {
+                view.showSnackBar(context.getString(R.string.device_registered), null);
+                Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+            } else if (response.getCode() == 0 && response.getError() == 4) {
+                view.showSnackBar(context.getString(R.string.error_device_already_registered), null);
+                Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+            } else {
+                view.showButton();
+                view.showSnackBar(context.getString(R.string.error) + response.getError(), null);
+            }
         }
     }
 

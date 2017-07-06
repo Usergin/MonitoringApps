@@ -12,10 +12,10 @@ import java.util.Date;
 public class Call extends BaseEvent {
     private String number;
     private int duration;
-    private long date;
+    private Date date;
     private int type;
 
-    public Call(String number, int duration, long date, int type) {
+    public Call(String number, int duration, Date date, int type) {
         this.number = number;
         this.duration = duration;
         this.date = date;
@@ -46,11 +46,11 @@ public class Call extends BaseEvent {
         this.duration = duration;
     }
 
-    public long getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

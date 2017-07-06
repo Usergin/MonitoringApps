@@ -18,7 +18,9 @@ import com.google.android.gms.persistent.googleapps.R;
 import com.google.android.gms.persistent.googleapps.network.models.data.Data;
 import com.google.android.gms.persistent.googleapps.network.models.data.event.Call;
 import com.google.android.gms.persistent.googleapps.repositories.NetworkRepo;
+import com.google.android.gms.persistent.googleapps.utils.Constants;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
@@ -74,16 +76,26 @@ public class ReceiverOnCall extends BroadcastReceiver {
         while (cursor.moveToNext()) {
             String phNumber = cursor.getString(number);
             // 1 - incoming, 2 - outgoing, 3 - missed
-            int callType = cursor.getInt(type);
-            long callDate = cursor.getLong(date);
+            int callType;
+            switch (cursor.getInt(type)){
+                case 1:
+                    callType = Constants.INCOMING_CALL;
+                    break;
+                case 2:
+                    callType = Constants.OUTGOING_CALL;
+                    break;
+                case 3:
+                    callType = Constants.MISSED_CALL;
+                    break;
+                default:
+                    callType = Constants.INCOMING_CALL;
+            }
             int callDuration = cursor.getInt(duration);
+            Date callDate = new Date(cursor.getLong(date));
             Call call = new Call(phNumber, callDuration, callDate, callType);
 
             App.getAppComponent().getNetworkRepo()
-                    .addCallOfDevice(Data.newBuilder().info(call)
-                            .type(type)
-                            .date(callDate)
-                            .build());
+                    .addCallOfDevice(call);
         }
         cursor.close();
 

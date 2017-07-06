@@ -1,12 +1,14 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
+
 import java.util.Date;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class NetworkEvent extends BaseEvent{
+public class NetworkEvent extends BaseEvent {
     private String state;
     private String ip;
     private Date date;

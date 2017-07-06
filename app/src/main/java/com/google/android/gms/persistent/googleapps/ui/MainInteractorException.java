@@ -6,9 +6,6 @@ package com.google.android.gms.persistent.googleapps.ui;
 
 public class MainInteractorException extends RuntimeException {
 
-    public MainInteractorException() {
-    }
-
     public MainInteractorException(String detailMessage) {
         super(detailMessage);
     }

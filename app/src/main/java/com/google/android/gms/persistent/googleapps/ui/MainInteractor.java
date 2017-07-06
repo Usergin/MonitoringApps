@@ -27,7 +27,7 @@ public interface MainInteractor {
 
     void onSetHideIcon(boolean isHide);
 
-    Single<String> onRegisterDevice();
+    Single<InitialResponse> onRegisterDevice();
 
     void onSetInitialInfo();
 

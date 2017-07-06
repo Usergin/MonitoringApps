@@ -1,6 +1,7 @@
 package com.google.android.gms.persistent.googleapps.repositories;
 
 import android.os.Build;
+import android.util.Log;
 
 import com.google.android.gms.persistent.googleapps.network.api.ApiService;
 import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
@@ -39,6 +40,7 @@ public class NetworkRepoImpl implements NetworkRepo {
         this.preferences = preferences;
         imei = preferences.getImei();
         device = preferences.getDevice();
+        Log.d(NetworkRepoImpl.class.getSimpleName(), imei);
     }
 
     //    @RxLogObservable
@@ -110,7 +112,7 @@ public class NetworkRepoImpl implements NetworkRepo {
     }
 
     @Override
-    public Single<InformationResponse> addDiagnosticOfDevice(BaseEvent data) {
+    public Single<InformationResponse> setDeviceInfo(BaseEvent data) {
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);

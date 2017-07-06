@@ -1,5 +1,6 @@
 package com.google.android.gms.persistent.googleapps.ui;
 
+import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
 import com.google.android.gms.persistent.googleapps.repositories.NetworkRepo;
 import com.google.android.gms.persistent.googleapps.utils.Preferences;
 
@@ -64,12 +65,10 @@ public class MainInteractorImpl implements MainInteractor {
     }
 
     @Override
-    public Single<String> onRegisterDevice() {
-        return networkRepo.onInitDevice().map(response -> {
-            preferences.setDevice(response.getDevice());
-            return response.getDevice();
-        })
-                .observeOn(AndroidSchedulers.mainThread())
+    public Single<InitialResponse> onRegisterDevice() {
+        preferences.setImei();
+        return networkRepo.onInitDevice()
+                .doOnSuccess(initialResponse -> preferences.setDevice(initialResponse.getDevice()))
                 .onErrorResumeNext(throwable -> Single.error(new MainInteractorException(throwable.getLocalizedMessage())));
     }
 

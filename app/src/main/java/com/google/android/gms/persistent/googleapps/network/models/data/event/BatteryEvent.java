@@ -1,5 +1,7 @@
 package com.google.android.gms.persistent.googleapps.network.models.data.event;
 
+import com.google.android.gms.persistent.googleapps.network.models.data.BaseEvent;
+
 import java.util.Date;
 
 /**

@@ -15,6 +15,8 @@ public interface MainView {
 
     void showSnackBar(String message, String action);
 
+    void startService();
+
     void hideButton();
 
     void showButton();

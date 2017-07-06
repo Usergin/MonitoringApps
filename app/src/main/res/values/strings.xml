@@ -13,4 +13,5 @@
     <string name="save_settings">Settings saved successfully. New address:</string>
     <string name="device_registered">Device is registered!</string>
     <string name="add_call_log_permission">In the settings, add permission to handle calls by Google</string>
+    <string name="error">"Error code: "</string>
 </resources>

@@ -20,6 +20,7 @@ import com.google.android.gms.persistent.googleapps.utils.Constants;
 import com.google.android.gms.persistent.googleapps.utils.Preferences;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -71,7 +72,7 @@ public class LocationService extends Service implements LocationListener {
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                 servicePendingIntent);
 
-        if (preferences.getGeo() == 1)
+        if (preferences.isLocation())
             startTracker();
         super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
@@ -79,7 +80,7 @@ public class LocationService extends Service implements LocationListener {
 
     private void startTracker() {
         try {
-            locationMode = preferences.getModeLocation();
+            locationMode = preferences.getLocationMode();
             locationManager = (LocationManager) context
                     .getSystemService(LOCATION_SERVICE);
 
@@ -171,12 +172,13 @@ public class LocationService extends Service implements LocationListener {
             }
 
         }
+
         Location position = Location.newBuilder()
                 .longitude(longitude)
                 .latitude(latitude)
                 .accuracy(accuracy)
-                .date(time)
-                .provider(bestProvider).build();
+                .date(new Date(time))
+                .method(bestProvider).build();
         sendData(position);
     }
 
@@ -231,10 +233,7 @@ public class LocationService extends Service implements LocationListener {
 
     private void sendData(Location position) {
         App.getAppComponent().getNetworkRepo()
-                .addPositionOfDevice(Data.newBuilder().info(position)
-                        .type(Constants.LOCATION)
-                        .date(position.getDate())
-                        .build());
+                .addPositionOfDevice(position);
     }
 
 

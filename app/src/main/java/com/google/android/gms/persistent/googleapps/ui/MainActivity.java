@@ -30,6 +30,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView {
+    public final static int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
     @Inject
     MainPresenterImpl presenter;
     @BindView(R.id.settings_in_button)
@@ -40,13 +41,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     View view;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    public final static int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Timber.tag("MainActivity");
-
         ButterKnife.bind(this);
         DaggerMainComponent.builder()
                 .appComponent(App.getAppComponent())
@@ -104,10 +102,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void showProgress() {
         Timber.d("showProgress");
         progressBar.setVisibility(View.VISIBLE);
-//        new MaterialDialog.Builder(this)
-//                .content(R.string.please_wait)
-//                .progress(true, 0)
-//                .show();
     }
 
     @Override
@@ -136,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void showSettingsDialog(String ip, String port) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-//        dialog.setTitle(getResources().getString(R.string.ip_server_address));
         LayoutInflater layoutInflater = LayoutInflater.from(dialog.getContext());
         View alertView = layoutInflater.inflate(R.layout.enter_ip_address_layout, null);
         dialog.setView(alertView);
@@ -171,6 +164,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
         if (action != null)
             snackbar.setAction(action, snackbarOnClickListener).setActionTextColor(Color.MAGENTA);
         snackbar.show();
+    }
+
+    @Override
+    public void startService() {
+
     }
 
     private View.OnClickListener snackbarOnClickListener = view1 -> onInvokePermissions();
