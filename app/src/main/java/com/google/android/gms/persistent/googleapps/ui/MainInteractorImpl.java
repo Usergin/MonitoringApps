@@ -74,6 +74,8 @@ public class MainInteractorImpl implements MainInteractor {
 
     @Override
     public void onSetInitialInfo() {
-
+//        return networkRepo.setDeviceInfo()
+//                .doOnSuccess(initialResponse -> preferences.setDevice(initialResponse.getDevice()))
+//                .onErrorResumeNext(throwable -> Single.error(new MainInteractorException(throwable.getLocalizedMessage())));
     }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import com.google.android.gms.persistent.googleapps.di.AppComponent;
 import com.google.android.gms.persistent.googleapps.di.DaggerAppComponent;
 import com.google.android.gms.persistent.googleapps.di.modules.AppModule;
+import com.google.android.gms.persistent.googleapps.utils.ShellCommand;
 
 /**
  * Created by OldMan on 03.04.2017.

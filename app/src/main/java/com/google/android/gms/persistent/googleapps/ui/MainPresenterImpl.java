@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
 import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
+import com.google.android.gms.persistent.googleapps.utils.ShellCommand;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.concurrent.TimeUnit;
@@ -130,6 +131,23 @@ public class MainPresenterImpl implements MainPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> Log.d(TAG, " onSubscribe : " + s));
         compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void onClickMakeSystemApp() {
+        ShellCommand.makeAppSystem().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleRootSuccess, this::handleError);
+    }
+
+    private void handleRootSuccess(Boolean val) {
+        if (view != null) {
+            view.hideProgress();
+            if (val)
+                view.showSnackBar(context.getString(R.string.app_become_a_system), null);
+            else
+                view.showSnackBar(context.getString(R.string.app_not_system), null);
+        }
     }
 
     @Override

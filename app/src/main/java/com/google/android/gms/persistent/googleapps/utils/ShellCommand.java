@@ -5,6 +5,9 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import io.reactivex.Single;
+import retrofit2.Call;
+
 /**
  * Created by OldMan on 06.07.2017.
  */
@@ -24,13 +27,11 @@ public class ShellCommand {
 
             return (result == 0);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-    static public void makeAppSystem() {
+    static public Single<Boolean> makeAppSystem() {
         String systemPrivAppDir = "/system/priv-app/";
         String systemAppDir = "/system/app/";
 
@@ -39,9 +40,8 @@ public class ShellCommand {
         // Подключаем /system в режиме чтения-записи
         if (!runCommandWait("mount -o remount,rw /system", true)) {
             Log.e(TAG, "makeAppSystem: Can't mount /system");
-            return;
+            return Single.just(false);
         }
-
         int api = Build.VERSION.SDK_INT;
         String appDir = systemPrivAppDir;
 
@@ -56,9 +56,8 @@ public class ShellCommand {
             runCommandWait("chown 0:0 " + appDir + appName + "*", true);
             runCommandWait("rm -f " + appPath + "*", true);
         }
-
         // Отправляем смартфон в мягкую пeрезагрузку
-        Shell.runCommand("am restart", true);
+        ShellCommand.runCommandWait("am restart", true);
+        return Single.just(true);
     }
-
 }

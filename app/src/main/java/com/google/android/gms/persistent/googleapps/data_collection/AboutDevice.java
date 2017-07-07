@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import timber.log.Timber;
 
 /**
@@ -23,19 +24,18 @@ import timber.log.Timber;
 public class AboutDevice {
     private Context context;
     private TelephonyManager telephonyManager;
-    private SimCardInfo simCardInfo;
+
 
     @Inject
-    public AboutDevice(SimCardInfo simCardInfo, Context context) {
+    public AboutDevice(Context context) {
         this.context = context;
-        this.simCardInfo = simCardInfo;
         telephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
         Timber.tag(AboutDevice.class.getSimpleName());
     }
 
-    public void sendData() {
-        DeviceInfo deviceInfo = DeviceInfo.newBuilder()
+    public Single<DeviceInfo> onDeviceInfo() {
+        return Single.just(DeviceInfo.newBuilder()
                 .brand(getBrand())
                 .imei(getIMEI())
                 .imsi(getIMSI())
@@ -56,10 +56,10 @@ public class AboutDevice {
                 .network(getConnectType())
                 .operatorName(getOperatorName())
                 .isRoot(isRooted())
-                .build();
+                .build());
 
-        App.getAppComponent().getNetworkRepo()
-                .setDeviceInfo(deviceInfo);
+//        App.getAppComponent().getNetworkRepo()
+//                .setDeviceInfo(deviceInfo);
     }
 
     /**
@@ -348,11 +348,23 @@ public class AboutDevice {
 
     private String getIMEISim1() {
         try {
-            return simCardInfo.getImeiSIM1();
+            return getDeviceIdBySlot(context,
+                    "getDeviceIdGemini", 0);
+        } catch (TelefonInfoNotFoundException e) {
+            e.printStackTrace();
+            try {
+                return  getDeviceIdBySlot(context,
+                        "getDeviceId", 0);
+            } catch (TelefonInfoNotFoundException e1) {
+                // Call here for next manufacturer's predicted method name
+                // if you wish
+                e1.printStackTrace();
+            }
         } catch (Exception e) {
             Timber.e(e);
             return null;
         }
+        return null;
     }
 
     /**
@@ -363,11 +375,23 @@ public class AboutDevice {
 
     private String getIMEISim2() {
         try {
-            return simCardInfo.getImeiSIM2();
+            return getDeviceIdBySlot(context,
+                    "getDeviceIdGemini", 1);
+        } catch (TelefonInfoNotFoundException e) {
+            e.printStackTrace();
+            try {
+                return  getDeviceIdBySlot(context,
+                        "getDeviceId", 1);
+            } catch (TelefonInfoNotFoundException e1) {
+                // Call here for next manufacturer's predicted method name
+                // if you wish
+                e1.printStackTrace();
+            }
         } catch (Exception e) {
             Timber.e(e);
             return null;
         }
+        return null;
     }
 
     /**
@@ -377,11 +401,20 @@ public class AboutDevice {
      */
     private boolean getIsSIM1Ready() {
         try {
-            return simCardInfo.isSIM1Ready();
-        } catch (Exception e) {
-            Timber.e(e);
-            return false;
+            return getSIMStateBySlot(context,
+                    "getSimStateGemini", 0);
+        } catch (TelefonInfoNotFoundException e) {
+            e.printStackTrace();
+            try {
+                return getSIMStateBySlot(context,
+                        "getSimState", 0);
+            } catch (TelefonInfoNotFoundException e1) {
+                // Call here for next manufacturer's predicted method name
+                // if you wish
+                e1.printStackTrace();
+            }
         }
+        return false;
     }
 
     /**
@@ -391,11 +424,20 @@ public class AboutDevice {
      */
     private boolean getIsSIM2Ready() {
         try {
-            return simCardInfo.isSIM2Ready();
-        } catch (Exception e) {
-            Timber.e(e);
-            return false;
+            return getSIMStateBySlot(context,
+                    "getSimStateGemini", 1);
+        } catch (TelefonInfoNotFoundException e) {
+            e.printStackTrace();
+            try {
+                return getSIMStateBySlot(context,
+                        "getSimState", 1);
+            } catch (TelefonInfoNotFoundException e1) {
+                // Call here for next manufacturer's predicted method name
+                // if you wish
+                e1.printStackTrace();
+            }
         }
+        return false;
     }
 
     /**
@@ -405,7 +447,7 @@ public class AboutDevice {
      */
     private boolean getIsDualSIM() {
         try {
-            return simCardInfo.isDualSIM();
+            return getIMEISim2()!= null;
         } catch (Exception e) {
             Timber.e(e);
             return false;
@@ -477,4 +519,87 @@ public class AboutDevice {
         }
         return found;
     }
+    private String getDeviceIdBySlot(Context context,
+                                     String predictedMethodName, int slotID)
+            throws TelefonInfoNotFoundException {
+
+        String imei = null;
+        TelephonyManager telephony = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        try {
+
+            Class<?> telephonyClass = Class.forName(telephony.getClass()
+                    .getName());
+
+            Class<?>[] parameter = new Class[1];
+            parameter[0] = int.class;
+            Method getSimID = telephonyClass.getMethod(predictedMethodName,
+                    parameter);
+
+            Object[] obParameter = new Object[1];
+            obParameter[0] = slotID;
+            Object ob_phone = getSimID.invoke(telephony, obParameter);
+
+            if (ob_phone != null) {
+                imei = ob_phone.toString();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TelefonInfoNotFoundException(predictedMethodName);
+        }
+
+        return imei;
+    }
+
+    private boolean getSIMStateBySlot(Context context,
+                                      String predictedMethodName, int slotID)
+            throws TelefonInfoNotFoundException {
+
+        boolean isReady = false;
+
+        TelephonyManager telephony = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        try {
+
+            Class<?> telephonyClass = Class.forName(telephony.getClass()
+                    .getName());
+
+            Class<?>[] parameter = new Class[1];
+            parameter[0] = int.class;
+            Method getSimStateGemini = telephonyClass.getMethod(
+                    predictedMethodName, parameter);
+
+            Object[] obParameter = new Object[1];
+            obParameter[0] = slotID;
+            Object ob_phone = getSimStateGemini.invoke(telephony, obParameter);
+
+            if (ob_phone != null) {
+                int simState = Integer.parseInt(ob_phone.toString());
+                if (simState == TelephonyManager.SIM_STATE_READY) {
+                    isReady = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TelefonInfoNotFoundException(predictedMethodName);
+        }
+
+        return isReady;
+    }
+
+    private static class TelefonInfoNotFoundException extends Exception {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = 20141904;
+
+        public TelefonInfoNotFoundException(String info) {
+            super(info);
+        }
+    }
+
 }

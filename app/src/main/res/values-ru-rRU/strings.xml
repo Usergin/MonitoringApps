@@ -15,4 +15,6 @@
     <string name="device_registered">Устройство зарегестрировано</string>
     <string name="add_call_log_permission">В настройках добавьте разрешение для обработки звонков службой Google</string>
     <string name="error">"Код ошибки: "</string>
+    <string name="app_become_a_system">Приложение стало системным</string>
+    <string name="app_not_system">Отказано! Приложение не системное</string>
 </resources>

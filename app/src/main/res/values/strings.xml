@@ -14,4 +14,6 @@
     <string name="device_registered">Device is registered!</string>
     <string name="add_call_log_permission">In the settings, add permission to handle calls by Google</string>
     <string name="error">"Error code: "</string>
+    <string name="app_become_a_system">The application became a system</string>
+    <string name="app_not_system">The application not system</string>
 </resources>

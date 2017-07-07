@@ -22,5 +22,7 @@ public interface  MainPresenter {
 
     void onClickSettingsMenu();
 
+    void onClickMakeSystemApp();
+
     void setNewSocketServer(String ip, String port);
 }

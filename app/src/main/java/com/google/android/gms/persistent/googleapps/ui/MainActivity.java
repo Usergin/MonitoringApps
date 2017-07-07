@@ -3,6 +3,7 @@ package com.google.android.gms.persistent.googleapps.ui;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -35,9 +36,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Inject
     AboutDevice aboutDevice;
     @BindView(R.id.settings_in_button)
-    ImageButton signInButton;
-    @BindView(R.id.sign_in_button)
     ImageButton settingsInButton;
+    @BindView(R.id.sign_in_button)
+    ImageButton signInButton;
     @BindView(R.id.view_layout)
     View view;
     @BindView(R.id.progress_bar)
@@ -52,13 +53,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 .appComponent(App.getAppComponent())
                 .mainModule(new MainModule(this))
                 .build().inject(this);
+      if(Build.VERSION.SDK_INT >Build.VERSION_CODES.M)
         onInvokePermissions();
     }
 
     private void onInvokePermissions() {
         presenter.invokePermission();
     }
-
 
     @OnClick(R.id.sign_in_button)
     public void onSignInButtonClick() {
@@ -68,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @OnClick(R.id.settings_in_button)
     public void onSettingClick() {
         presenter.onClickSettingsMenu();
+    }
+
+    @OnClick(R.id.system_app_button)
+    public void onSystemAppClick() {
+        presenter.onClickMakeSystemApp();
     }
 
     private InputFilter[] getIpFilter() {

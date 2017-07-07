@@ -139,7 +139,7 @@ public class SimCardInfo {
         return isReady;
     }
 
-    private static class TelefonInfoNotFoundException extends Exception {
+    static class TelefonInfoNotFoundException extends Exception {
 
         /**
          *
