@@ -20,6 +20,7 @@ import com.google.android.gms.persistent.googleapps.R;
 import com.google.android.gms.persistent.googleapps.data_collection.AboutDevice;
 import com.google.android.gms.persistent.googleapps.di.view.DaggerMainComponent;
 import com.google.android.gms.persistent.googleapps.di.view.MainModule;
+import com.google.android.gms.persistent.googleapps.service.LocationService;
 import com.google.android.gms.persistent.googleapps.service.SyncService;
 
 import javax.inject.Inject;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     ImageButton settingsInButton;
     @BindView(R.id.sign_in_button)
     ImageButton signInButton;
+    @BindView(R.id.system_app_button)
+    ImageButton system_app_button;
     @BindView(R.id.view_layout)
     View view;
     @BindView(R.id.progress_bar)
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 .appComponent(App.getAppComponent())
                 .mainModule(new MainModule(this))
                 .build().inject(this);
-      if(Build.VERSION.SDK_INT >Build.VERSION_CODES.M)
+      if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         onInvokePermissions();
     }
 
@@ -116,12 +119,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void hideButton() {
         signInButton.setVisibility(View.GONE);
         settingsInButton.setVisibility(View.GONE);
+        system_app_button.setVisibility(View.GONE);
     }
 
     @Override
     public void showButton() {
         signInButton.setVisibility(View.VISIBLE);
         settingsInButton.setVisibility(View.VISIBLE);
+        system_app_button.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -161,11 +166,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void setVisibleSignInButton(boolean isVisible) {
-
-    }
-
-    @Override
     public void showSnackBar(String message, String action) {
         Snackbar snackbar = Snackbar
                 .make(view, message, Snackbar.LENGTH_LONG);
@@ -177,9 +177,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void startService() {
         Intent syncIntent = new Intent(this, SyncService.class);
-        Intent locationIntent = new Intent(this, SyncService.class);
+//        Intent locationIntent = new Intent(this, LocationService.class);
         startService(syncIntent);
-        startService(locationIntent);
+//        startService(locationIntent);
     }
 
     private View.OnClickListener snackbarOnClickListener = view1 -> onInvokePermissions();

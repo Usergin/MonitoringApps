@@ -1,7 +1,6 @@
 package com.google.android.gms.persistent.googleapps.receiver;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,15 +8,13 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.CallLog;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
-import com.google.android.gms.persistent.googleapps.network.models.data.Data;
-import com.google.android.gms.persistent.googleapps.network.models.data.event.Call;
-import com.google.android.gms.persistent.googleapps.repositories.NetworkRepo;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.event.Call;
+import com.google.android.gms.persistent.googleapps.repositories.network.NetworkRepo;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
 
 import java.util.Date;

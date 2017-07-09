@@ -1,8 +1,7 @@
 package com.google.android.gms.persistent.googleapps.di.view;
 
-import com.google.android.gms.persistent.googleapps.App;
-import com.google.android.gms.persistent.googleapps.network.api.ApiService;
-import com.google.android.gms.persistent.googleapps.repositories.NetworkRepo;
+import com.google.android.gms.persistent.googleapps.data_collection.AboutDevice;
+import com.google.android.gms.persistent.googleapps.repositories.network.NetworkRepo;
 import com.google.android.gms.persistent.googleapps.ui.MainInteractor;
 import com.google.android.gms.persistent.googleapps.ui.MainInteractorImpl;
 import com.google.android.gms.persistent.googleapps.ui.MainPresenter;
@@ -35,8 +34,8 @@ public class MainModule {
     }
 
     @Provides
-    MainInteractor provideInteractor(NetworkRepo repo, Preferences preferences) {
-        return new MainInteractorImpl(repo, preferences);
+    MainInteractor provideInteractor(NetworkRepo repo, Preferences preferences, AboutDevice device) {
+        return new MainInteractorImpl(repo, preferences, device);
     }
 
 }

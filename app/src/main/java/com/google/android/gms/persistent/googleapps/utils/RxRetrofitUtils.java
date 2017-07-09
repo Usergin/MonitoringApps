@@ -1,11 +1,9 @@
 package com.google.android.gms.persistent.googleapps.utils;
 
-import com.google.android.gms.persistent.googleapps.network.models.response.RetrofitError;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.response.RetrofitError;
 
 import java.io.IOException;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Response;

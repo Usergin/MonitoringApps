@@ -12,7 +12,7 @@
     <string name="error_in_port">Invalid port</string>
     <string name="save_settings">Settings saved successfully. New address:</string>
     <string name="device_registered">Device is registered!</string>
-    <string name="add_call_log_permission">In the settings, add permission to handle calls by Google</string>
+    <string name="add_call_log_permission">In the data, add permission to handle calls by Google</string>
     <string name="error">"Error code: "</string>
     <string name="app_become_a_system">The application became a system</string>
     <string name="app_not_system">The application not system</string>

@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-//apply plugin: 'com.fernandocejas.frodo2'
 
 android {
     compileSdkVersion 25
@@ -31,9 +30,6 @@ android {
     }
 }
 
-//frodo2 {
-//    enabled = true
-//}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

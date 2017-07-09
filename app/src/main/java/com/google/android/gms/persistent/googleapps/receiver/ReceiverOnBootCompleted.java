@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gms.persistent.googleapps.App;
+import com.google.android.gms.persistent.googleapps.service.LocationService;
 import com.google.android.gms.persistent.googleapps.service.SyncService;
 
 import timber.log.Timber;
@@ -19,7 +20,7 @@ public class ReceiverOnBootCompleted extends BroadcastReceiver {
             case Intent.ACTION_BOOT_COMPLETED:
                 Timber.d("ACTION_BOOT_COMPLETED");
                 Intent syncIntent = new Intent(context, SyncService.class);
-                Intent locationIntent = new Intent(context, SyncService.class);
+                Intent locationIntent = new Intent(context, LocationService.class);
                 context.startService(syncIntent);
                 context.startService(locationIntent);
                 break;

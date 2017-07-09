@@ -9,9 +9,8 @@ import com.google.android.gms.persistent.googleapps.di.modules.ApiModule;
 import com.google.android.gms.persistent.googleapps.di.modules.ApiServiceModule;
 import com.google.android.gms.persistent.googleapps.di.modules.AppModule;
 import com.google.android.gms.persistent.googleapps.di.modules.NetworkRepoModule;
-import com.google.android.gms.persistent.googleapps.di.modules.SimCardModule;
-import com.google.android.gms.persistent.googleapps.network.api.ApiService;
-import com.google.android.gms.persistent.googleapps.repositories.NetworkRepo;
+import com.google.android.gms.persistent.googleapps.repositories.network.api.ApiService;
+import com.google.android.gms.persistent.googleapps.repositories.network.NetworkRepo;
 import com.google.android.gms.persistent.googleapps.utils.Preferences;
 
 import java.util.Calendar;
@@ -26,7 +25,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, ApiModule.class,
         ApiServiceModule.class, NetworkRepoModule.class,
-        SimCardModule.class, AboutDeviceModule.class})
+        AboutDeviceModule.class})
 public interface AppComponent {
 
     Context getContext();

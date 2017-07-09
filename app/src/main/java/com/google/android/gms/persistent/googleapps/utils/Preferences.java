@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
-import com.google.android.gms.persistent.googleapps.network.models.data.Settings;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.DeviceInfo;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.Settings;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -18,6 +18,7 @@ import io.reactivex.Single;
  */
 
 public class Preferences {
+    private final String TAG = Preferences.class.getSimpleName();
     private Gson gson;
     private Context context;
 
@@ -89,25 +90,35 @@ public class Preferences {
 
     public void setDevice(String val) {
         prefs.edit().putString(device, val).apply();
+        Log.d(TAG, prefs.getString(device, "0"));
     }
 
     public String getDevice() {
         return prefs.getString(device, null);
     }
 
-    public void setImei() {
+    public Single setImei() {
         try {
             TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            prefs.edit().putString(imei, mngr.getDeviceId()).apply();
-            } catch (Exception e) {
+            Single.just(prefs.edit().putString(imei, mngr.getDeviceId()).commit());
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return Single.just(false);
     }
 
     public String getImei() {
-        Log.d("Preferences ", prefs.getString(imei, null));
-
-        return prefs.getString(imei, null);
+        String val = prefs.getString(imei, null);
+        if(val == null)
+            try {
+                TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                val = mngr.getDeviceId();
+                prefs.edit().putString(imei, val).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        Log.d("Preferences ", val);
+        return val;
     }
 
 
@@ -155,7 +166,7 @@ public class Preferences {
         edit.commit();
     }
 
-    public Single<Boolean> setWorkSetup(Settings settings) {
+    public Single<Boolean> setAppSettings(Settings settings) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(call, settings.isBell());
         editor.putBoolean(sms, settings.isSms());

@@ -1,9 +1,7 @@
 package com.google.android.gms.persistent.googleapps.ui;
 
-import com.google.android.gms.persistent.googleapps.network.models.response.BaseResponse;
-import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.response.InitialResponse;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 /**
@@ -29,7 +27,7 @@ public interface MainInteractor {
 
     Single<InitialResponse> onRegisterDevice();
 
-    void onSetInitialInfo();
+    Single<Integer> onSetDeviceInfo();
 
     interface OnAboutDeviceListener {
         void onSetBaseInfoFinished(boolean result);

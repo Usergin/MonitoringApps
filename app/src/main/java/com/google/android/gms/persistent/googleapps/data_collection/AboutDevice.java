@@ -6,8 +6,7 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.google.android.gms.persistent.googleapps.App;
-import com.google.android.gms.persistent.googleapps.network.models.data.DeviceInfo;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.DeviceInfo;
 
 import java.io.File;
 import java.lang.reflect.Method;

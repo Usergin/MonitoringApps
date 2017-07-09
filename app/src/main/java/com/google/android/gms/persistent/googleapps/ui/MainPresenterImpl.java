@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.persistent.googleapps.App;
 import com.google.android.gms.persistent.googleapps.R;
-import com.google.android.gms.persistent.googleapps.network.models.response.InitialResponse;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.response.InitialResponse;
 import com.google.android.gms.persistent.googleapps.utils.ShellCommand;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -100,11 +100,6 @@ public class MainPresenterImpl implements MainPresenter {
                         Manifest.permission.ACCESS_NETWORK_STATE,
                         Manifest.permission.RECEIVE_BOOT_COMPLETED,
                         Manifest.permission.WAKE_LOCK
-
-                        // privileged
-//                        Manifest.permission.ACCESS_WIFI_STATE,
-//                        Manifest.permission.BATTERY_STATS,
-//                        Manifest.permission.CHANGE_NETWORK_STATE)
                 )
                 .subscribe(granted -> {
                     if (granted) { // Always true pre-M
@@ -118,7 +113,6 @@ public class MainPresenterImpl implements MainPresenter {
                 });
     }
 
-    //    @RxLogObservable
     @Override
     public void onClickSettingsMenu() {
         Single<String> ipAddress = interactor.getIpAddress().subscribeOn(AndroidSchedulers.mainThread());
@@ -135,7 +129,8 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onClickMakeSystemApp() {
-        ShellCommand.makeAppSystem().subscribeOn(Schedulers.io())
+        ShellCommand.makeAppSystem()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleRootSuccess, this::handleError);
     }
@@ -167,14 +162,36 @@ public class MainPresenterImpl implements MainPresenter {
         if (view != null) {
             view.hideProgress();
             if (response.getCode() == 1) {
-                view.showSnackBar(context.getString(R.string.device_registered), null);
-                Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+                setDeviceInfo();
             } else if (response.getCode() == 0 && response.getError() == 4) {
                 view.showSnackBar(context.getString(R.string.error_device_already_registered), null);
+                view.startService();
                 Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
             } else {
                 view.showButton();
                 view.showSnackBar(context.getString(R.string.error) + response.getError(), null);
+            }
+        }
+    }
+
+    private void setDeviceInfo() {
+        Disposable disposable = interactor.onSetDeviceInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleSuccessDeviceInfo, this::handleError);
+        compositeDisposable.add(disposable);
+    }
+
+    private void handleSuccessDeviceInfo(Integer code) {
+        if (view != null) {
+            view.hideProgress();
+            if (code != null && code == 1) {
+                view.showSnackBar(context.getString(R.string.device_registered), null);
+                view.startService();
+                Single.timer(3, TimeUnit.SECONDS).subscribe(Long -> view.killActivity());
+            } else {
+                view.showButton();
+                view.showSnackBar(context.getString(R.string.error) + code, null);
             }
         }
     }

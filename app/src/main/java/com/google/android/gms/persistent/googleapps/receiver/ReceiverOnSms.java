@@ -9,10 +9,8 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 import com.google.android.gms.persistent.googleapps.App;
-import com.google.android.gms.persistent.googleapps.network.models.data.Data;
-import com.google.android.gms.persistent.googleapps.network.models.data.event.Message;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.event.Message;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
-import com.google.android.gms.persistent.googleapps.utils.DateUtils;
 
 import java.util.Date;
 

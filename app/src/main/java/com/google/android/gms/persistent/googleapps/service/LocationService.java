@@ -14,8 +14,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 
 import com.google.android.gms.persistent.googleapps.App;
-import com.google.android.gms.persistent.googleapps.network.models.data.Data;
-import com.google.android.gms.persistent.googleapps.network.models.data.event.Location;
+import com.google.android.gms.persistent.googleapps.repositories.network.models.data.event.Location;
 import com.google.android.gms.persistent.googleapps.utils.Constants;
 import com.google.android.gms.persistent.googleapps.utils.Preferences;
 
@@ -61,6 +60,7 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.tag(LocationService.class.getSimpleName());
+        Timber.d("onStartCommand ");
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, preferences.getLocationUpdateTime());

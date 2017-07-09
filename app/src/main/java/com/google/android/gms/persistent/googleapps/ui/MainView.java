@@ -11,8 +11,6 @@ public interface MainView {
 
     void showSettingsDialog(String ip, String port);
 
-    void setVisibleSignInButton(boolean isVisible);
-
     void showSnackBar(String message, String action);
 
     void startService();

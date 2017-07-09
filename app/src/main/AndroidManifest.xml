@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.gms.persistent.googleapps">
     <!-- privileged permission-->
-    <!-- @SystemApi Allows an application to read or write the secure system settings.
+    <!-- @SystemApi Allows an application to read or write the secure system data.
    <p>Not for use by third-party applications. -->
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_WIFI_CREDENTIAL" />
@@ -77,12 +77,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".service.SyncService"
-            android:enabled="true"
-            android:exported="false" />
-
         <receiver
             android:name=".receiver.ReceiverOnBootCompleted"
             android:enabled="true"
@@ -131,6 +125,9 @@
                 <action android:name="com.android.mms.transaction.MESSAGE_SENT" />
             </intent-filter>
         </receiver>
+        <service
+            android:name=".service.SyncService"
+           />
 
         <service
             android:name=".service.LocationService"
