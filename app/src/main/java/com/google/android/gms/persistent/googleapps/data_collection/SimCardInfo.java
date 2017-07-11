@@ -139,14 +139,13 @@ public class SimCardInfo {
         return isReady;
     }
 
-    static class TelefonInfoNotFoundException extends Exception {
-
+    private static class TelefonInfoNotFoundException extends Exception {
         /**
          *
          */
         private static final long serialVersionUID = 20141904;
 
-        public TelefonInfoNotFoundException(String info) {
+        TelefonInfoNotFoundException(String info) {
             super(info);
         }
     }
@@ -171,19 +170,19 @@ public class SimCardInfo {
         return imeiSIM2 != null;
     }
 
-    public void setImeiSIM1(String imeiSIM1) {
+    private void setImeiSIM1(String imeiSIM1) {
         this.imeiSIM1 = imeiSIM1;
     }
 
-    public void setImeiSIM2(String imeiSIM2) {
+    private void setImeiSIM2(String imeiSIM2) {
         this.imeiSIM2 = imeiSIM2;
     }
 
-    public void setSIM1Ready(boolean SIM1Ready) {
+    private void setSIM1Ready(boolean SIM1Ready) {
         isSIM1Ready = SIM1Ready;
     }
 
-    public void setSIM2Ready(boolean SIM2Ready) {
+    private void setSIM2Ready(boolean SIM2Ready) {
         isSIM2Ready = SIM2Ready;
     }
 }

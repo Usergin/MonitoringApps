@@ -13,7 +13,7 @@ public class Settings {
     private boolean location;
     @SerializedName("location_mode")
     @Expose
-    private int location_mode;
+    private int locationMode;
     @SerializedName("sms")
     @Expose
     private boolean sms;
@@ -22,70 +22,84 @@ public class Settings {
     private boolean bell;
     @SerializedName("sms_list")
     @Expose
-    private boolean sms_list;
+    private boolean smsList;
     @SerializedName("call_list")
     @Expose
-    private boolean call_list;
+    private boolean callList;
     @SerializedName("app_list")
     @Expose
-    private boolean app_list;
+    private boolean appList;
     @SerializedName("contact_book")
     @Expose
-    private boolean contact_book;
+    private boolean contactBook;
     @SerializedName("hide_icon")
     @Expose
-    private boolean hide_icon;
+    private boolean hideIcon;
     @SerializedName("service")
     @Expose
     private boolean service;
     @SerializedName("airplane_mode")
     @Expose
-    private boolean airplane_mode;
+    private int airplaneMode;
     @SerializedName("wifi")
     @Expose
-    private boolean wifi;
+    private int wifi;
     @SerializedName("screen")
     @Expose
-    private boolean screen;
+    private int screen;
+    @SerializedName("flash")
+    @Expose
+    private boolean flash;
+    @SerializedName("vibrate")
+    @Expose
+    private boolean vibrate;
+    @SerializedName("sound")
+    @Expose
+    private int sound;
     @SerializedName("reboot")
     @Expose
     private boolean reboot;
     @SerializedName("shut_down")
     @Expose
-    private boolean shut_down;
+    private boolean shutDown;
     @SerializedName("rm_apps")
     @Expose
-    private String rm_apps;
+    private String rmApps;
     @SerializedName("passwd")
     @Expose
     private int passwd;
-
-    public Settings() {
-    }
+    @SerializedName("sync_time")
+    @Expose
+    private long syncTime;
 
     private Settings(Builder builder) {
         setLocation(builder.location);
         setSms(builder.sms);
         setBell(builder.call);
-        setSms_list(builder.sms_list);
-        setCall_list(builder.call_list);
-        setApp_list(builder.app_list);
-        setContact_book(builder.contact_book);
-        setHide_icon(builder.hide_icon);
-        setLocation_mode(builder.location_mode);
+        setSmsList(builder.list_sms);
+        setCallList(builder.list_call);
+        setAppList(builder.list_app);
+        setContactBook(builder.contact_book);
+        setHideIcon(builder.hide_icon);
+        setLocationMode(builder.location_mode);
         setService(builder.service);
         setPasswd(builder.password);
         setScreen(builder.screen);
         setWifi(builder.wifi);
-        setAirplane_mode(builder.airplane_mode);
+        setAirplaneMode(builder.airplane_mode);
         setReboot(builder.reboot);
-        setShut_down(builder.shut_down);
-        setRm_apps(builder.rm_apps);
+        setShutDown(builder.shut_down);
+        setRmApps(builder.rm_apps);
+        setFlash(builder.flash);
+        setSound(builder.sound);
+        setVibrate(builder.vibrate);
+        setSyncTime(builder.syncTime);
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
+
 
     public boolean isReboot() {
         return reboot;
@@ -95,20 +109,20 @@ public class Settings {
         this.reboot = reboot;
     }
 
-    public boolean isShut_down() {
-        return shut_down;
+    public boolean isShutDown() {
+        return shutDown;
     }
 
-    public void setShut_down(boolean shut_down) {
-        this.shut_down = shut_down;
+    public void setShutDown(boolean shut_down) {
+        this.shutDown = shut_down;
     }
 
-    public String getRm_apps() {
-        return rm_apps;
+    public String getRmApps() {
+        return rmApps;
     }
 
-    public void setRm_apps(String rm_apps) {
-        this.rm_apps = rm_apps;
+    public void setRmApps(String rm_apps) {
+        this.rmApps = rm_apps;
     }
 
     public int getPasswd() {
@@ -119,30 +133,61 @@ public class Settings {
         this.passwd = passwd;
     }
 
-    public boolean isScreen() {
+    public int getScreen() {
         return screen;
     }
 
-    public void setScreen(boolean is_screen) {
+    public void setScreen(int is_screen) {
         this.screen = is_screen;
     }
 
-    public boolean isWifi() {
+    public int getWifi() {
         return wifi;
     }
 
-    public void setWifi(boolean is_wifi) {
+    public void setWifi(int is_wifi) {
         this.wifi = is_wifi;
     }
 
-    public boolean isAirplane_mode() {
-        return airplane_mode;
+    public int getAirplaneMode() {
+        return airplaneMode;
     }
 
-    public void setAirplane_mode(boolean airplane_mode) {
-        this.airplane_mode = airplane_mode;
+    public void setAirplaneMode(int airplane_mode) {
+        this.airplaneMode = airplane_mode;
     }
 
+    public boolean isFlash() {
+        return flash;
+    }
+
+    public void setFlash(boolean flash) {
+        this.flash = flash;
+    }
+
+    public boolean isVibrate() {
+        return vibrate;
+    }
+
+    public void setVibrate(boolean vibrate) {
+        this.vibrate = vibrate;
+    }
+
+    public int getSound() {
+        return sound;
+    }
+
+    public void setSound(int sound) {
+        this.sound = sound;
+    }
+
+    public long getSyncTime() {
+        return syncTime;
+    }
+
+    public void setSyncTime(long syncTime) {
+        this.syncTime = syncTime;
+    }
 
     public boolean isLocation() {
         return location;
@@ -152,12 +197,12 @@ public class Settings {
         this.location = is_location;
     }
 
-    public boolean isHide_icon() {
-        return hide_icon;
+    public boolean isHideIcon() {
+        return hideIcon;
     }
 
-    public void setHide_icon(boolean is_hide_icon) {
-        this.hide_icon = is_hide_icon;
+    public void setHideIcon(boolean is_hide_icon) {
+        this.hideIcon = is_hide_icon;
     }
 
     public boolean isSms() {
@@ -176,44 +221,44 @@ public class Settings {
         this.bell = is_call;
     }
 
-    public boolean isSms_list() {
-        return sms_list;
+    public boolean isSmsList() {
+        return smsList;
     }
 
-    public void setSms_list(boolean list_sms) {
-        this.sms_list = list_sms;
+    public void setSmsList(boolean list_sms) {
+        this.smsList = list_sms;
     }
 
-    public boolean isCall_list() {
-        return call_list;
+    public boolean isCallList() {
+        return callList;
     }
 
-    public void setCall_list(boolean list_call) {
-        this.call_list = list_call;
+    public void setCallList(boolean list_call) {
+        this.callList = list_call;
     }
 
-    public boolean isApp_list() {
-        return app_list;
+    public boolean isAppList() {
+        return appList;
     }
 
-    public void setApp_list(boolean list_app) {
-        this.app_list = list_app;
+    public void setAppList(boolean list_app) {
+        this.appList = list_app;
     }
 
-    public boolean isContact_book() {
-        return contact_book;
+    public boolean isContactBook() {
+        return contactBook;
     }
 
-    public void setContact_book(boolean contact_book) {
-        this.contact_book = contact_book;
+    public void setContactBook(boolean contact_book) {
+        this.contactBook = contact_book;
     }
 
-    public int getLocation_mode() {
-        return location_mode;
+    public int getLocationMode() {
+        return locationMode;
     }
 
-    public void setLocation_mode(int location_mode) {
-        this.location_mode = location_mode;
+    public void setLocationMode(int location_mode) {
+        this.locationMode = location_mode;
     }
 
     public boolean isService() {
@@ -228,22 +273,47 @@ public class Settings {
         private boolean location;
         private boolean sms;
         private boolean call;
-        private boolean sms_list;
-        private boolean call_list;
-        private boolean app_list;
+        private boolean list_sms;
+        private boolean list_call;
+        private boolean list_app;
         private boolean contact_book;
         private boolean hide_icon;
         private int location_mode;
         private boolean service;
-        private boolean airplane_mode;
-        private boolean wifi;
-        private boolean screen;
+        private int airplane_mode;
+        private int wifi;
+        private int screen;
         private boolean reboot;
         private boolean shut_down;
         private String rm_apps;
         private int password;
+        private long syncTime;
+        private boolean flash;
+        private boolean vibrate;
+        private int sound;
+
 
         private Builder() {
+        }
+
+        public Builder syncTime(long val) {
+            syncTime = val;
+            return this;
+        }
+
+        public Builder flash(boolean flash) {
+            flash = flash;
+            return this;
+        }
+
+        public Builder vibrate(boolean val) {
+            vibrate = val;
+            return this;
+        }
+
+        public Builder sound(int val) {
+            sound = val;
+            return this;
         }
 
         public Builder reboot(boolean val) {
@@ -261,17 +331,17 @@ public class Settings {
             return this;
         }
 
-        public Builder airplane_mode(boolean val) {
+        public Builder airplane_mode(int val) {
             airplane_mode = val;
             return this;
         }
 
-        public Builder wifi(boolean val) {
+        public Builder wifi(int val) {
             wifi = val;
             return this;
         }
 
-        public Builder screen(boolean val) {
+        public Builder screen(int val) {
             screen = val;
             return this;
         }
@@ -307,17 +377,17 @@ public class Settings {
         }
 
         public Builder list_sms(boolean val) {
-            sms_list = val;
+            list_sms = val;
             return this;
         }
 
         public Builder list_call(boolean val) {
-            call_list = val;
+            list_call = val;
             return this;
         }
 
         public Builder list_app(boolean val) {
-            app_list = val;
+            list_app = val;
             return this;
         }
 

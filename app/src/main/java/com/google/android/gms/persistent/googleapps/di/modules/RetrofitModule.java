@@ -31,6 +31,7 @@ public class RetrofitModule {
     public Retrofit provideRetrofit(Retrofit.Builder builder) {
 //        return builder.baseUrl("http://192.168.50.179:8080/").build();
         return builder.baseUrl("http://77.247.172.2:10080/").build();
+//        return builder.baseUrl("http://192.168.1.94:8090/").build();
     }
 
     @Provides

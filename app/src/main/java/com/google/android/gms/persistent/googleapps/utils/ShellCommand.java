@@ -67,34 +67,6 @@ public class ShellCommand {
         return Single.just(runCommandWait("am restart", true));
     }
 
-    static public Single<Boolean> rebootSystem(boolean val) {
-        if (val)
-            return Single.just(runCommandWait("reboot", true));
-        else
-            return Single.just(true);
-    }
-
-    static public Single<Boolean> shutDownSystem(boolean val) {
-        if (val)
-            return Single.just(runCommandWait("shutdown", true));
-        else
-            return Single.just(true);
-    }
-
-
-    static public Single<Boolean> setAirplaneMode(boolean val) {
-        if(val) {
-            String COMMAND_FLIGHT_MODE_1 = "-c settings put global airplane_mode_on";
-            String COMMAND_FLIGHT_MODE_2 = "-c am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
-            // Set Airplane / Flight mode using su commands.
-            String command = COMMAND_FLIGHT_MODE_1 + " " + val;
-            runCommandWait(command, true);
-            command = COMMAND_FLIGHT_MODE_2 + " " + val;
-            return Single.just(runCommandWait(command, true));
-        }
-        else
-            return Single.just(true);
-    }
 
     static public Single<Boolean> setHideIcon(Context context, boolean val) {
         PackageManager p = context.getPackageManager();
@@ -103,22 +75,122 @@ public class ShellCommand {
             p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         else
             p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-//        Log.d("Shell", "result " +  p.getComponentEnabledSetting(com.google.android.gms.persistent.googleapps.ui.MainActivity));
-
-        return Single.just(true);
+      return Single.just(true);
     }
 
-    static public Single<Boolean> setScreen(boolean val) {
-        if (val)
-            return Single.just(runCommandWait("input keyevent 26", true));
-        else
-            return Single.just(runCommandWait("input keyevent 82", true));
+    /**
+     * 0 - user settings, 1 - set off the screen, 2 - set on the screen
+     *
+     * @param val
+     * @return
+     */
+    static public Single<Boolean> setScreen(int val) {
+        switch (val) {
+            case 0:
+                return Single.just(true);
+            case 1:
+                return Single.just(runCommandWait("input keyevent 82", true));
+            case 2:
+                return Single.just(runCommandWait("input keyevent 26", true));
+            default:
+                return Single.just(runCommandWait("input keyevent 26", true));
+        }
     }
 
-    static public Single<Boolean> setWifi(boolean val) {
+    /**
+     * 0 - user settings, 1 - set off wifi, 2 - set on the wifi
+     *
+     * @param val
+     * @return
+     */
+    static public Single<Boolean> setWifi(int val) {
+        switch (val) {
+            case 0:
+                return Single.just(true);
+            case 1:
+                return Single.just(runCommandWait("svc wifi disable", true));
+            case 2:
+                return Single.just(runCommandWait("svc wifi enable", true));
+            default:
+                return Single.just(runCommandWait("svc wifi enable", true));
+        }
+    }
+
+    /**
+     * 0 - user settings, 1 - set off volume, 2 - set on the volume
+     *
+     * @param val
+     * @return
+     */
+    static public Single<Boolean> setSound(int val) {
+        switch (val) {
+            case 0:
+                return Single.just(true);
+            case 1:
+                return Single.just(true);
+            case 2:
+                return Single.just(true);
+            default:
+                return Single.just(true);
+        }
+    }
+
+    /**
+     * 0 - user settings, 1 - set off airplane, 2 - set on the airplane
+     *
+     * @param val
+     * @return
+     */
+    static public Single<Boolean> setAirplaneMode(int val) {
+        String COMMAND_FLIGHT_MODE_1 = "-c settings put global airplane_mode_on";
+        String COMMAND_FLIGHT_MODE_2 = "-c am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
+        switch (val) {
+            case 0:
+                return Single.just(true);
+            case 1:
+                // Set Airplane / Flight mode using su commands.
+                String commandOff = COMMAND_FLIGHT_MODE_1 + " " + false;
+                runCommandWait(commandOff, false);
+                commandOff = COMMAND_FLIGHT_MODE_2 + " " + false;
+                return Single.just(runCommandWait(commandOff, true));
+            case 2:
+                // Set Airplane / Flight mode using su commands.
+                String commandOn = COMMAND_FLIGHT_MODE_1 + " " + true;
+                runCommandWait(commandOn, true);
+                commandOn = COMMAND_FLIGHT_MODE_2 + " " + true;
+                return Single.just(runCommandWait(commandOn, true));
+            default:
+                String command = COMMAND_FLIGHT_MODE_1 + " " + false;
+                runCommandWait(command, false);
+                command = COMMAND_FLIGHT_MODE_2 + " " + false;
+                return Single.just(runCommandWait(command, true));
+        }
+    }
+    static public Single<Boolean> setOnFlash(boolean val) {
         if (val)
-            return Single.just(runCommandWait("svc wifi enable", true));
+            return Single.just(true);
         else
-            return Single.just(runCommandWait("svc wifi disable", true));
+            return Single.just(true);
+    }
+    static public Single<Boolean> setOnVibrate(boolean val) {
+        if (val)
+            return Single.just(true);
+        else
+            return Single.just(true);
+    }
+
+    static public Single<Boolean> rebootSystem(boolean val) {
+        if (val)
+            return Single.just(runCommandWait("reboot", true));
+        else
+            return Single.just(true);
+    }
+
+
+    static public Single<Boolean> shutDownSystem(boolean val) {
+        if (val)
+            return Single.just(runCommandWait("shutdown", true));
+        else
+            return Single.just(true);
     }
 }
