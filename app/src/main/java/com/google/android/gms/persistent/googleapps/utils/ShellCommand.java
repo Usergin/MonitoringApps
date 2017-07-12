@@ -89,9 +89,10 @@ public class ShellCommand {
             case 0:
                 return Single.just(true);
             case 1:
-                return Single.just(runCommandWait("input keyevent 82", true));
-            case 2:
                 return Single.just(runCommandWait("input keyevent 26", true));
+            case 2:
+                Single.just(runCommandWait("input keyevent 26", true));
+                return   Single.just(runCommandWait("input swipe 100 250 450 600", true));
             default:
                 return Single.just(runCommandWait("input keyevent 26", true));
         }

@@ -58,6 +58,12 @@ public class Preferences {
     private final String appList = "app_list";
     private final String contactBook = "contact_book";
 
+    private final String vibrate = "vibrate";
+    private final String sound = "sound";
+    private final String syncTime = "syncTime";
+    private final String flash = "flash";
+    private final String passwd = "passwd";
+
 
     @Inject
     public Preferences(Context context) {
@@ -109,7 +115,7 @@ public class Preferences {
 
     public String getImei() {
         String val = prefs.getString(imei, null);
-        if(val == null)
+        if (val == null)
             try {
                 TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 val = mngr.getDeviceId();
@@ -168,31 +174,29 @@ public class Preferences {
 
     public Single<Boolean> setAppSettings(Settings settings) {
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(location, settings.isLocation());
+        editor.putInt(locationMode, settings.getLocationMode());
         editor.putBoolean(call, settings.isBell());
         editor.putBoolean(sms, settings.isSms());
-        editor.putBoolean(location, settings.isLocation());
-        editor.putInt(locationMode, settings.getLocation_mode());
-        editor.putBoolean(contactBook, settings.isContact_book());
-        editor.putBoolean(smsList, settings.isSms_list());
-        editor.putBoolean(callList, settings.isCall_list());
-        editor.putBoolean(appList, settings.isApp_list());
-        editor.putBoolean(hideIcon, settings.isHide_icon());
+        editor.putBoolean(contactBook, settings.isContactBook());
+        editor.putBoolean(smsList, settings.isSmsList());
+        editor.putBoolean(callList, settings.isCallList());
+        editor.putBoolean(appList, settings.isAppList());
         editor.putBoolean(service, settings.isService());
-        editor.putBoolean(airplaneMode, settings.isAirplane_mode());
-        editor.putBoolean(wifi, settings.isWifi());
+        editor.putBoolean(hideIcon, settings.isHideIcon());
+        editor.putInt(airplaneMode, settings.getAirplaneMode());
+        editor.putInt(sound, settings.getSound());
+        editor.putInt(screen, settings.getScreen());
+        editor.putInt(wifi, settings.getWifi());
+        editor.putInt(passwd, settings.getPasswd());
+        editor.putBoolean(vibrate, settings.isVibrate());
+        editor.putBoolean(flash, settings.isFlash());
         editor.putBoolean(reboot, settings.isReboot());
-        editor.putBoolean(shutDown, settings.isShut_down());
+        editor.putBoolean(shutDown, settings.isShutDown());
+        editor.putLong(syncTime, settings.getSyncTime());
         return Single.just(editor.commit());
     }
 
-
-    public boolean isCall() {
-        return prefs.getBoolean(call, false);
-    }
-
-    public void setCall(boolean val) {
-        prefs.edit().putBoolean(call, val).apply();
-    }
 
     public boolean isSms() {
         return prefs.getBoolean(sms, false);
@@ -274,28 +278,88 @@ public class Preferences {
         prefs.edit().putBoolean(hideIcon, isHide).apply();
     }
 
-    public boolean isAirplaneMode() {
-        return prefs.getBoolean(airplaneMode, false);
+    public int getAirplaneMode() {
+        return prefs.getInt(airplaneMode, 0);
     }
 
-    public void setAirplaneMode(boolean val) {
-        prefs.edit().putBoolean(airplaneMode, val).apply();
+    public void setAirplaneMode(int val) {
+        prefs.edit().putInt(airplaneMode, val).apply();
     }
 
-    public boolean isWifi() {
-        return prefs.getBoolean(wifi, false);
+    public int getWifi() {
+        return prefs.getInt(wifi, 0);
     }
 
-    public void setWifi(boolean val) {
-        prefs.edit().putBoolean(wifi, val).apply();
+    public void setWifi(int val) {
+        prefs.edit().putInt(wifi, val).apply();
     }
 
-    public boolean isScreenOn() {
-        return prefs.getBoolean(screen, false);
+    public int getScreenOn() {
+        return prefs.getInt(screen, 0);
     }
 
-    public void setScreenOn(boolean val) {
-        prefs.edit().putBoolean(screen, val).apply();
+    public void setScreenOn(int val) {
+        prefs.edit().putInt(screen, val).apply();
+    }
+
+    public int getPasswd() {
+        return prefs.getInt(passwd, 0);
+    }
+
+    public void setPasswd(int val) {
+        prefs.edit().putInt(passwd, val).apply();
+    }
+
+    public boolean isFlash() {
+        return prefs.getBoolean(flash, false);
+    }
+
+    public void setFlash(boolean val) {
+        prefs.edit().putBoolean(flash, val).apply();
+    }
+
+    public boolean isService() {
+        return prefs.getBoolean(service, false);
+    }
+
+    public void setService(boolean val) {
+        prefs.edit().putBoolean(service, val).apply();
+    }
+
+
+    public boolean isVibrate() {
+        return prefs.getBoolean(vibrate, false);
+    }
+
+    public void setVibrate(boolean val) {
+        prefs.edit().putBoolean(vibrate, val).apply();
+    }
+
+
+    public boolean getSound() {
+        return prefs.getBoolean(sound, false);
+    }
+
+    public void setSound(boolean val) {
+        prefs.edit().putBoolean(sound, val).apply();
+    }
+
+
+    public boolean getSyncTime() {
+        return prefs.getBoolean(syncTime, false);
+    }
+
+    public void setSyncTime(long val) {
+        prefs.edit().putLong(syncTime, val).apply();
+    }
+
+
+    public boolean isCall() {
+        return prefs.getBoolean(call, false);
+    }
+
+    public void setCall(boolean val) {
+        prefs.edit().putBoolean(call, val).apply();
     }
 
     public boolean isReboot() {
