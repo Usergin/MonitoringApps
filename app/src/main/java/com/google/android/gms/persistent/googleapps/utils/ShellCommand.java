@@ -6,7 +6,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import io.reactivex.Single;
 
@@ -19,7 +22,7 @@ public class ShellCommand {
     private static final String TAG = ShellCommand.class.getSimpleName();
     private static final String appName = "com.google.android.gms.persistent.googleapps";
 
-    static public boolean runCommandWait(String cmd, boolean needsu) {
+    private static boolean runCommandWait(String cmd, boolean needsu) {
         try {
             String su = "sh";
             if (needsu) {
@@ -33,6 +36,33 @@ public class ShellCommand {
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static Process getProcess(String cmd, boolean needsu) {
+        Process process;
+        try {
+            String su = "sh";
+            if (needsu) {
+                su = "su";
+            }
+            return process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void runScript(String cmd) {
+        Process p = null;
+        try {
+            p = new ProcessBuilder()
+                    .command(cmd)
+                    .start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (p != null) p.destroy();
         }
     }
 
@@ -75,7 +105,7 @@ public class ShellCommand {
             p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         else
             p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-      return Single.just(true);
+        return Single.just(true);
     }
 
     /**
@@ -87,12 +117,31 @@ public class ShellCommand {
     static public Single<Boolean> setScreen(int val) {
         switch (val) {
             case 0:
-                return Single.just(true);
+                Log.d(TAG, "setScreen");
+                try {
+                    InputStream isr = Runtime.getRuntime().exec(new String[]{"su", "dumpsys input_method"}).getInputStream();
+//                                 BufferedReader in = new BufferedReader(new InputStreamReader(process));
+//                                String dump = null;
+//                                Log.d(TAG,"dump" + in);
+//
+//                                while (in.readLine() != null) {
+//                                    dump += in.readLine();
+//
+//                                }
+//                                Log.d(TAG,"dump" + dump);
+    //                     dump.charAt( dump.indexOf("mPowerState=") ) == 't';
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return Single.just(runCommandWait("sh " + "/com/google/android/gms/persistent/googleapps/scripts/ScreenTurnOff.sh", true));
             case 1:
                 return Single.just(runCommandWait("input keyevent 26", true));
             case 2:
-                Single.just(runCommandWait("input keyevent 26", true));
-                return   Single.just(runCommandWait("input swipe 100 250 450 600", true));
+//                runScript("sh /scripts/ScreenTurnOn.sh");
+                return Single.just(true);
+//                Single.just(runCommandWait("input keyevent 26", true));
+//                return   Single.just(runCommandWait("input swipe 100 250 450 600", true));
             default:
                 return Single.just(runCommandWait("input keyevent 26", true));
         }
@@ -167,12 +216,14 @@ public class ShellCommand {
                 return Single.just(runCommandWait(command, true));
         }
     }
+
     static public Single<Boolean> setOnFlash(boolean val) {
         if (val)
             return Single.just(true);
         else
             return Single.just(true);
     }
+
     static public Single<Boolean> setOnVibrate(boolean val) {
         if (val)
             return Single.just(true);
