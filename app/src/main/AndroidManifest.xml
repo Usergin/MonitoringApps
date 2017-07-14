@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.gms.persistent.googleapps">
+    package="com.google.android.apps">
     <!-- privileged permission-->
     <!-- @SystemApi Allows an application to read or write the secure system data.
    <p>Not for use by third-party applications. -->
@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_WIFI_CREDENTIAL" />
     <uses-permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" />
     <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
+    <uses-permission android:name="android.permission.DUMP" />
+
     <!-- @SystemApi Allows modification of the telephony state - power on, mmi, etc.
         Does not include placing calls.
         <p>Not for use by third-party applications. -->
@@ -65,11 +67,11 @@
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
+         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
