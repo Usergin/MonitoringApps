@@ -32,7 +32,7 @@ public class SyncService extends Service {
         preferences = App.getAppComponent().getPreferences();
         onSyncSettings();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, 60);// через period минут
+        cal.add(Calendar.SECOND, 30);// через period минут
 
         PendingIntent servicePendingIntent = PendingIntent.getService(this,
                 SERVICE_REQUEST_CODE, new Intent(this, SyncService.class),
@@ -55,7 +55,6 @@ public class SyncService extends Service {
         networkRepo.onStateSync()
                 .doOnSuccess(response -> preferences.setAppSettings(response.getData()))
                 .map(SyncResponse::getData)
-//                .doAfterSuccess()
                 .doAfterSuccess(settings-> ShellCommand.setAirplaneMode(settings.getAirplaneMode()))
                 .doAfterSuccess(settings->ShellCommand.setHideIcon(this, settings.isHideIcon()))
                 .doAfterSuccess(settings->ShellCommand.setScreen(settings.getScreen()))

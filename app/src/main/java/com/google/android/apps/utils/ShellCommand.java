@@ -2,17 +2,15 @@ package com.google.android.apps.utils;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.apps.ui.MainActivity;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
 
 import io.reactivex.Single;
 
@@ -24,7 +22,8 @@ public class ShellCommand {
 
     private static final String TAG = ShellCommand.class.getSimpleName();
     private static final String appName = "com.google.android.apps";
-    private  static final int api = Build.VERSION.SDK_INT;
+    private static final int api = Build.VERSION.SDK_INT;
+
     private static boolean runCommandWait(String cmd, boolean needsu) {
         try {
             String su = "sh";
@@ -38,7 +37,8 @@ public class ShellCommand {
             return (result == 0);
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            Log.e("Shell", e.getLocalizedMessage());
+            return false;
         }
     }
 
@@ -95,6 +95,9 @@ public class ShellCommand {
             runCommandWait("chown 0:0 " + appDir + appName + "*", true);
             runCommandWait("rm -f " + appPath + "*", true);
         }
+        runCommandWait("chmod 777 /sys/class/leds/button-backlight/brightness", true);
+        runCommandWait("chmod 777 /sys/class/timed_output/vibrator/enable", true);
+
         // Отправляем смартфон в мягкую пeрезагрузку
         return Single.just(runCommandWait("am restart", true));
     }
@@ -118,51 +121,36 @@ public class ShellCommand {
      */
     static public Single<Boolean> setScreen(int val) {
         switch (val) {
-            case 0:
-                Log.d(TAG, "setScreen");
-                try {
-//                    if(api<)
-                    Process process = getProcess("dumpsys input_method | grep mScreenOn=true", true);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String dump = null;
-                                Log.d(TAG,"dump" + in.readLine());
-//
-                    while (in.readLine() != null) {
-                        dump += in.readLine();
-
-                    }
-                    in.close();
-                    process.waitFor();
-                    Log.d(TAG,"dump" + dump);
-
-                    Process process2 = getProcess("dumpsys power | grep mPowerState", true);
-                    BufferedReader in2 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
-                    String dump2 = null;
-                    Log.d(TAG,"dump" + in2.readLine());
-//
-                    while (in2.readLine() != null) {
-                        dump2 += in2.readLine();
-
-                    }
-                    in2.close();
-                    process2.waitFor();
-                    Log.d(TAG,"dump" + dump2);
-                    //                     dump.charAt( dump.indexOf("mPowerState=") ) == 't';
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                return Single.just(runCommandWait("sh " + "/com/google/android/gms/persistent/googleapps/scripts/ScreenTurnOff.sh", true));
             case 1:
-                return Single.just(runCommandWait("input keyevent 26", true));
+                if (isScreenOn())
+                    return Single.just(runCommandWait("input keyevent 26", true));
+                break;
             case 2:
-//                runScript("sh /scripts/ScreenTurnOn.sh");
-                return Single.just(true);
-//                Single.just(runCommandWait("input keyevent 26", true));
-//                return   Single.just(runCommandWait("input swipe 100 250 450 600", true));
-            default:
-                return Single.just(runCommandWait("input keyevent 26", true));
+                if (!isScreenOn()) {
+                    Single.just(runCommandWait("input keyevent 26", true));
+                    return Single.just(runCommandWait("input swipe 100 250 450 600", true));
+                }
+                break;
         }
+        return Single.just(true);
+
+    }
+
+    private static boolean isScreenOn() {
+        return runCommandWait("dumpsys input_method | grep mScreenOn=true", true) || !runCommandWait("dumpsys power | grep mPowerState=0", true);
+//            Process process = getProcess("dumpsys power | grep mPowerState=0", true);
+//            BufferedReader in2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            String dump2 = null;
+//            Log.d(TAG,"dump" + in2.readLine());
+//            while (in2.readLine() != null) {
+//                dump2 += in2.readLine();
+//
+//            }
+//            in2.close();
+//            process.waitFor();
+//            Log.d(TAG,"result " + process.waitFor() + " dump " + dump2);
+//            //                     dump.charAt( dump.indexOf("mPowerState=") ) == 't';
+//            return  process.waitFor()==0;
     }
 
     /**
@@ -173,15 +161,12 @@ public class ShellCommand {
      */
     static public Single<Boolean> setWifi(int val) {
         switch (val) {
-            case 0:
-                return Single.just(true);
             case 1:
                 return Single.just(runCommandWait("svc wifi disable", true));
             case 2:
                 return Single.just(runCommandWait("svc wifi enable", true));
-            default:
-                return Single.just(runCommandWait("svc wifi enable", true));
         }
+        return Single.just(true);
     }
 
     /**
@@ -192,15 +177,12 @@ public class ShellCommand {
      */
     static public Single<Boolean> setSound(int val) {
         switch (val) {
-            case 0:
-                return Single.just(true);
             case 1:
-                return Single.just(true);
+                return Single.just(runCommandWait("service call audio 6 i32 2 i32 0", true));
             case 2:
-                return Single.just(true);
-            default:
-                return Single.just(true);
+                return Single.just(runCommandWait("service call audio 6 i32 2 i32 7", true));
         }
+        return Single.just(true);
     }
 
     /**
@@ -209,44 +191,40 @@ public class ShellCommand {
      * @param val
      * @return
      */
+    /*
+    ToDo WHAT -c
+     */
     static public Single<Boolean> setAirplaneMode(int val) {
         String COMMAND_FLIGHT_MODE_1 = "-c settings put global airplane_mode_on";
         String COMMAND_FLIGHT_MODE_2 = "-c am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
+
         switch (val) {
-            case 0:
-                return Single.just(true);
             case 1:
                 // Set Airplane / Flight mode using su commands.
-                String commandOff = COMMAND_FLIGHT_MODE_1 + " " + false;
-                runCommandWait(commandOff, false);
-                commandOff = COMMAND_FLIGHT_MODE_2 + " " + false;
-                return Single.just(runCommandWait(commandOff, true));
+                runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + false, false);
+                return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + false, true));
             case 2:
                 // Set Airplane / Flight mode using su commands.
-                String commandOn = COMMAND_FLIGHT_MODE_1 + " " + true;
-                runCommandWait(commandOn, true);
-                commandOn = COMMAND_FLIGHT_MODE_2 + " " + true;
-                return Single.just(runCommandWait(commandOn, true));
-            default:
-                String command = COMMAND_FLIGHT_MODE_1 + " " + false;
-                runCommandWait(command, false);
-                command = COMMAND_FLIGHT_MODE_2 + " " + false;
-                return Single.just(runCommandWait(command, true));
+                runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + true, true);
+                return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + true, true));
         }
+        return Single.just(true);
     }
 
     static public Single<Boolean> setOnFlash(boolean val) {
-        if (val)
-            return Single.just(true);
+         if (val)
+            return Single.just(runCommandWait("echo 125 > /sys/class/leds/button-backlight/brightness", true));
         else
-            return Single.just(true);
+            return Single.just(runCommandWait("echo 0 > /sys/class/leds/button-backlight/brightness", true));
+
     }
 
     static public Single<Boolean> setOnVibrate(boolean val) {
+//       return   Single.just( runCommandWait("echo 10000 > /sys/devices/virtual/timed_output/vibrator/enable", true));
         if (val)
-            return Single.just(true);
+            return Single.just( runCommandWait("echo 100 > /sys/devices/virtual/timed_output/vibrator/enable", true));
         else
-            return Single.just(true);
+            return Single.just( runCommandWait("echo 0 > /sys/devices/virtual/timed_output/vibrator/enable", true));
     }
 
     static public Single<Boolean> rebootSystem(boolean val) {
