@@ -12,6 +12,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 
 import com.google.android.apps.App;
@@ -26,6 +28,8 @@ import java.util.List;
 import timber.log.Timber;
 
 public class LocationService extends Service implements LocationListener {
+   private final String TAG = LocationService.class.getSimpleName();
+
     protected LocationManager locationManager;
     private Context context;
     private Preferences preferences;
@@ -42,20 +46,16 @@ public class LocationService extends Service implements LocationListener {
 
     private final int RESTART_SERVICE = 1000 * 60 * 5;
 
-
-    public LocationService() {
-    }
-
     @Override
     public void onCreate() {
         context = App.getAppComponent().getContext();
         preferences = App.getAppComponent().getPreferences();
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -186,10 +186,7 @@ public class LocationService extends Service implements LocationListener {
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void setGPSLocation() {
@@ -240,17 +237,19 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(android.location.Location location) {
+        Log.d(TAG, "onLocationChanged " + location);
 
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d(TAG, "onStatusChanged " + provider + " " + status + " " + extras);
 
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        Log.d(TAG, "onProviderEnabled " + provider );
     }
 
     @Override

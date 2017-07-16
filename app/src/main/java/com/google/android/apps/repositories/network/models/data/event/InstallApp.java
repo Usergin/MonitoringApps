@@ -11,11 +11,11 @@ public class InstallApp {
     private String info;
     private Date date;
 
-    public InstallApp(String name, String info, Date date) {
-        this.name = name;
-        this.info = info;
-        this.date = date;
-    }
+//    public InstallApp(String name, String info, Date date) {
+//        this.name = name;
+//        this.info = info;
+//        this.date = date;
+//    }
 
     public Date getDate() {return date;
     }

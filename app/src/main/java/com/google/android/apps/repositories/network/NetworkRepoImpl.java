@@ -1,7 +1,5 @@
 package com.google.android.apps.repositories.network;
 
-import android.os.Build;
-
 
 import com.google.android.apps.repositories.network.api.ApiService;
 import com.google.android.apps.repositories.network.models.data.BaseEvent;
@@ -44,8 +42,7 @@ public class NetworkRepoImpl implements NetworkRepo {
     @Override
     public Single<InitialResponse> onInitDevice() {
         imei = preferences.getImei();
-        InitialRequest request = new InitialRequest(imei, Build.MODEL, Build.VERSION.RELEASE);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.onInitDevice(request));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.onInitDevice(new InitialRequest(imei)));
     }
 
     @Override

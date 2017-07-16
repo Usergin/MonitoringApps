@@ -11,10 +11,10 @@ public class DeviceEvent extends BaseEvent {
     private String status;
     private Date date;
 
-    public DeviceEvent(String status, Date date) {
-        this.status = status;
-        this.date = date;
-    }
+//    public DeviceEvent(String status, Date date) {
+//        this.status = status;
+//        this.date = date;
+//    }
 
     public DeviceEvent() {
     }

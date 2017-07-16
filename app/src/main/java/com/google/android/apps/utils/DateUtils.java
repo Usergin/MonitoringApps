@@ -10,8 +10,7 @@ import java.util.Date;
  */
 
 public class DateUtils {
-    public static Date ConvertMilliSecondsToFormattedDate(long milliSeconds){
-         Date date = new Date(milliSeconds);
-        return date;
+    public static Date convertMilliSecondsToFormattedDate(long milliSeconds){
+        return new Date(milliSeconds);
     }
 }

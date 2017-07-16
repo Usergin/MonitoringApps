@@ -3,6 +3,7 @@ package com.google.android.apps.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.apps.App;
 import com.google.android.apps.service.LocationService;
@@ -11,47 +12,51 @@ import com.google.android.apps.service.SyncService;
 import timber.log.Timber;
 
 public class ReceiverOnBootCompleted extends BroadcastReceiver {
+    private final String TAG = ReceiverOnBootCompleted.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Timber.tag("ReceiverOnBootCompleted");
-        Timber.d(intent.getAction());
+        Log.d(TAG, "ReceiverOnBootCompleted");
+        Log.d(TAG, "intent " + intent.getAction());
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
-                Timber.d("ACTION_BOOT_COMPLETED");
+                Log.d(TAG, "ACTION_BOOT_COMPLETED");
                 Intent syncIntent = new Intent(context, SyncService.class);
                 Intent locationIntent = new Intent(context, LocationService.class);
                 context.startService(syncIntent);
-                context.startService(locationIntent);
+//                context.startService(locationIntent);
                 break;
             case Intent.ACTION_SHUTDOWN:
-                Timber.d("ACTION_SHUTDOWN");
+                Log.d(TAG, "ACTION_SHUTDOWN");
                 break;
             case Intent.ACTION_AIRPLANE_MODE_CHANGED:
-                Timber.d("ACTION_AIRPLANE_MODE_CHANGED");
+                Log.d(TAG, "ACTION_AIRPLANE_MODE_CHANGED");
                 break;
             case Intent.ACTION_SCREEN_ON:
-                Timber.d("ACTION_SCREEN_ON");
+                Log.d(TAG, "ACTION_SCREEN_ON");
                 App.setIsScreenOn(true);
                 break;
             case Intent.ACTION_SCREEN_OFF:
-                Timber.d("ACTION_SCREEN_OFF");
+                Log.d(TAG, "ACTION_SCREEN_OFF");
                 App.setIsScreenOn(false);
                 break;
             case Intent.ACTION_POWER_CONNECTED:
-                Timber.d("ACTION_POWER_CONNECTED");
+                Log.d(TAG, "ACTION_POWER_CONNECTED");
                 break;
             case Intent.ACTION_POWER_DISCONNECTED:
-                Timber.d("ACTION_POWER_DISCONNECTED");
+                Log.d(TAG, "ACTION_POWER_DISCONNECTED");
                 break;
             case Intent.ACTION_BATTERY_LOW:
-                Timber.d("ACTION_BATTERY_LOW");
+                Log.d(TAG, "ACTION_BATTERY_LOW");
                 break;
             case Intent.ACTION_BATTERY_OKAY:
-                Timber.d("ACTION_BATTERY_OKAY");
+                Log.d(TAG, "ACTION_BATTERY_OKAY");
                 break;
             case Intent.ACTION_REBOOT:
-                Timber.d("REBOOT");
+                Log.d(TAG, "REBOOT");
+                break;
+            default:
+                Log.d(TAG, "intent.getAction()" + intent.getAction());
                 break;
         }
 

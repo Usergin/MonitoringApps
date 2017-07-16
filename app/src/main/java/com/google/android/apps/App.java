@@ -12,14 +12,17 @@ import com.google.android.apps.di.modules.AppModule;
 
 public class App extends Application {
     private static AppComponent appComponent;
-    private static App context;
+    private static App app;
     private static boolean isScreenOn;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
+        app = this;
         setAppComponent();
+    }
+    public static App getInstance(){
+        return app;
     }
 
     public static AppComponent getAppComponent() {
@@ -34,7 +37,7 @@ public class App extends Application {
 
     private static AppComponent buildAppComponent() {
         appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(context))
+                .appModule(new AppModule(getInstance()))
                 .build();
         return appComponent;
     }

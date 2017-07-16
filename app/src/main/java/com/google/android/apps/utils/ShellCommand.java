@@ -3,7 +3,6 @@ package com.google.android.apps.utils;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -43,13 +42,12 @@ public class ShellCommand {
     }
 
     private static Process getProcess(String cmd, boolean needsu) {
-        Process process;
         try {
             String su = "sh";
             if (needsu) {
                 su = "su";
             }
-            return process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
+            return Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -104,6 +102,7 @@ public class ShellCommand {
 
 
     static public Single<Boolean> setHideIcon(Context context, boolean val) {
+        Log.d(TAG, "setHideIcon");
         PackageManager p = context.getPackageManager();
         ComponentName componentName = new ComponentName(context, MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
         if (val)
@@ -120,6 +119,7 @@ public class ShellCommand {
      * @return
      */
     static public Single<Boolean> setScreen(int val) {
+        Log.d(TAG, "setScreen");
         switch (val) {
             case 1:
                 if (isScreenOn())
@@ -160,6 +160,7 @@ public class ShellCommand {
      * @return
      */
     static public Single<Boolean> setWifi(int val) {
+        Log.d(TAG, "setWifi");
         switch (val) {
             case 1:
                 return Single.just(runCommandWait("svc wifi disable", true));
@@ -176,6 +177,7 @@ public class ShellCommand {
      * @return
      */
     static public Single<Boolean> setSound(int val) {
+        Log.d(TAG, "setSound");
         switch (val) {
             case 1:
                 return Single.just(runCommandWait("service call audio 6 i32 2 i32 0", true));
@@ -194,25 +196,57 @@ public class ShellCommand {
     /*
     ToDo WHAT -c
      */
-    static public Single<Boolean> setAirplaneMode(int val) {
+    static public Single<Boolean> setAirplaneMode(int val, Context context) {
+        Log.d(TAG, "setAirplaneMode");
         String COMMAND_FLIGHT_MODE_1 = "-c settings put global airplane_mode_on";
         String COMMAND_FLIGHT_MODE_2 = "-c am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
-
+        boolean state = isAirplaneMode(context);
         switch (val) {
             case 1:
                 // Set Airplane / Flight mode using su commands.
-                runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + false, false);
-                return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + false, true));
+                if (state)
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                        return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + false, true))
+                                .doAfterSuccess(aBoolean -> runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + false, true));
+                    } else {
+                        return Single.just(runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
+                                "&& input keyevent 19 " +
+                                "&& input keyevent 23" +
+                                "&& input keyevent 22 " +
+                                "&& input keyevent 66", true));
+                    }
+                break;
             case 2:
-                // Set Airplane / Flight mode using su commands.
-                runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + true, true);
-                return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + true, true));
+                if (!state)
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                        return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + true, true))
+                                .doAfterSuccess(aBoolean -> runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + true, true));
+                    } else {
+                        return Single.just(runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
+                                "&& input keyevent 19 " +
+                                "&& input keyevent 23" +
+                                "&& input keyevent 22 " +
+                                "&& input keyevent 66", true));
+
+                    }
+                break;
         }
         return Single.just(true);
     }
 
+    private static boolean isAirplaneMode(Context context) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            // API 17 onwards
+            return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+        } else {
+            // API 16 and earlier.
+            return Settings.System.getInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+        }
+    }
+
     static public Single<Boolean> setOnFlash(boolean val) {
-         if (val)
+        Log.d(TAG, "setOnFlash");
+        if (val)
             return Single.just(runCommandWait("echo 125 > /sys/class/leds/button-backlight/brightness", true));
         else
             return Single.just(runCommandWait("echo 0 > /sys/class/leds/button-backlight/brightness", true));
@@ -220,14 +254,17 @@ public class ShellCommand {
     }
 
     static public Single<Boolean> setOnVibrate(boolean val) {
+        Log.d(TAG, "setOnVibrate");
+
 //       return   Single.just( runCommandWait("echo 10000 > /sys/devices/virtual/timed_output/vibrator/enable", true));
         if (val)
-            return Single.just( runCommandWait("echo 100 > /sys/devices/virtual/timed_output/vibrator/enable", true));
+            return Single.just(runCommandWait("echo 100 > /sys/devices/virtual/timed_output/vibrator/enable", true));
         else
-            return Single.just( runCommandWait("echo 0 > /sys/devices/virtual/timed_output/vibrator/enable", true));
+            return Single.just(runCommandWait("echo 0 > /sys/devices/virtual/timed_output/vibrator/enable", true));
     }
 
     static public Single<Boolean> rebootSystem(boolean val) {
+        Log.d(TAG, "rebootSystem");
         if (val)
             return Single.just(runCommandWait("reboot", true));
         else
@@ -236,9 +273,26 @@ public class ShellCommand {
 
 
     static public Single<Boolean> shutDownSystem(boolean val) {
+        Log.d(TAG, "shutDownSystem");
         if (val)
             return Single.just(runCommandWait("shutdown", true));
         else
             return Single.just(true);
+    }
+
+    static public Single<Boolean> setValueLocation(int val) {
+        Log.d(TAG, "setValueLocation");
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            switch (val) {
+                case 0:
+                    runCommandWait(" settings put secure location_providers_allowed +gps", true);
+                case 1:
+                    runCommandWait(" settings put secure location_providers_allowed +network", true);
+
+            }
+        }
+        return Single.just(false);
+//        else
+//            return Single.just(true);
     }
 }

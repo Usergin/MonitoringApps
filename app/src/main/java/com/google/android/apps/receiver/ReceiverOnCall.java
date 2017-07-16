@@ -31,9 +31,8 @@ public class ReceiverOnCall extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         networkRepo = App.getAppComponent().getNetworkRepo();
-        Timber.tag("ReceiverOnCall");
-        Timber.d("Ring" + intent.getAction());
-        if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
+
+        if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             Timber.d(intent.getExtras().getString("android.intent.extra.PHONE_NUMBER"));
         } else {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
@@ -57,13 +56,15 @@ public class ReceiverOnCall extends BroadcastReceiver {
     }
 
     private void sendDetailsCall(Context context) {
-        StringBuffer stringBuffer = new StringBuffer();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, R.string.add_call_log_permission, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        StringBuffer stringBuffer = new StringBuffer();
+//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+//            Toast.makeText(context, R.string.add_call_log_permission, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        String[] projection = new String[]{CallLog.Calls.NUMBER};
         Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
-                null, null, null, CallLog.Calls.DATE + " DESC");
+                projection, null, null, CallLog.Calls.DATE + " DESC");
+
         int number = cursor.getColumnIndex(CallLog.Calls.NUMBER);
         int type = cursor.getColumnIndex(CallLog.Calls.TYPE);
         int date = cursor.getColumnIndex(CallLog.Calls.DATE);

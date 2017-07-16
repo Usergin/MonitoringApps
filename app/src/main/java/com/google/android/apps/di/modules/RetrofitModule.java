@@ -38,8 +38,7 @@ public class RetrofitModule {
     @Singleton
     Cache provideHttpCache(Application application) {
         int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(application.getCacheDir(), cacheSize);
-        return cache;
+        return new Cache(application.getCacheDir(), cacheSize);
     }
 
     @Provides

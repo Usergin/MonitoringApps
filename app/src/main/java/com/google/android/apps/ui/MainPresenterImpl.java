@@ -74,8 +74,8 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void getDeviceIdOnServer() {
         if (view != null) {
-            view.hideButton();
             view.showProgress();
+            view.hideButton();
         }
         Disposable disposable = interactor.onRegisterDevice()
                 .subscribeOn(Schedulers.io())

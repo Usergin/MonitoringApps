@@ -301,8 +301,8 @@ public class Settings {
             return this;
         }
 
-        public Builder flash(boolean flash) {
-            flash = flash;
+        public Builder flash(boolean val) {
+            flash = val;
             return this;
         }
 

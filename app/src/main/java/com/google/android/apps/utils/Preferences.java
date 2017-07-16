@@ -102,23 +102,18 @@ public class Preferences {
     public String getDevice() {
         return prefs.getString(device, null);
     }
-
-    public Single setImei() {
-        try {
-            TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            Single.just(prefs.edit().putString(imei, mngr.getDeviceId()).commit());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Single.just(false);
-    }
+    
 
     public String getImei() {
         String val = prefs.getString(imei, null);
         if (val == null)
             try {
                 TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                val = mngr.getDeviceId();
+                if (mngr.getDeviceId() != null)
+                    val = mngr.getDeviceId();
+                else
+                    val = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
                 prefs.edit().putString(imei, val).apply();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -169,7 +164,7 @@ public class Preferences {
         edit.putBoolean("is_info", true);
         edit.putString("period", "1"); // period must equal 10 min
         edit.putString("code", "-1");
-        edit.commit();
+        edit.apply();
     }
 
     public Single<Boolean> setAppSettings(Settings settings) {

@@ -102,14 +102,12 @@
         </receiver>
         <receiver
             android:name=".receiver.ReceiverOnCall"
-            android:enabled="true"
-            android:exported="false"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <!--android:enabled="true"-->
+            <!--android:exported="false"-->
             <!-- android:permission="android.permission.READ_PRIVILEGED_PHONE_STATE"> -->
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
@@ -120,13 +118,8 @@
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-            <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
-
                 <data android:mimeType="application/vnd.wap.mms-message" />
-            </intent-filter>
-            <intent-filter android:priority="1000">
                 <action android:name="com.android.mms.transaction.MESSAGE_SENT" />
             </intent-filter>
         </receiver>

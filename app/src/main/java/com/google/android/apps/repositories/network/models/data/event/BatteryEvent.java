@@ -16,16 +16,16 @@ public class BatteryEvent extends BaseEvent {
     private String type_charging;
     private Date date;
 
-    public BatteryEvent() {
-    }
-
-    public BatteryEvent(String level, String status, String battery_status, String type_charging, Date date) {
-        this.level = level;
-        this.status = status;
-        this.battery_status = battery_status;
-        this.type_charging = type_charging;
-        this.date = date;
-    }
+//    public BatteryEvent() {
+//    }
+//
+//    public BatteryEvent(String level, String status, String battery_status, String type_charging, Date date) {
+//        this.level = level;
+//        this.status = status;
+//        this.battery_status = battery_status;
+//        this.type_charging = type_charging;
+//        this.date = date;
+//    }
 
     public String getLevel() {
         return level;

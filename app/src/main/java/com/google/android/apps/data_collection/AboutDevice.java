@@ -2,6 +2,7 @@ package com.google.android.apps.data_collection;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -111,7 +112,11 @@ public class AboutDevice {
 
     private String getIMEI() {
         try {
-            return telephonyManager.getDeviceId();
+            if (telephonyManager.getDeviceId() != null)
+                return telephonyManager.getDeviceId();
+            else
+                return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
         } catch (Exception e) {
             Timber.e(e);
             return null;
@@ -289,6 +294,9 @@ public class AboutDevice {
                 type = "UMTS";
                 break;
             case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                type = "UNKNOWN";
+                break;
+            default:
                 type = "UNKNOWN";
                 break;
         }
@@ -502,9 +510,8 @@ public class AboutDevice {
         // Best way for new devices
         DisplayMetrics displayMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(displayMetrics);
-        String screenSize = displayMetrics.widthPixels
+        return displayMetrics.widthPixels
                 + " x " + displayMetrics.heightPixels;
-        return screenSize;
     }
 
     private static boolean isRooted() {

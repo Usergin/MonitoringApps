@@ -18,10 +18,10 @@ public class InitialRequest {
     @Expose
     private String version_os;
 
-    public InitialRequest(String imei, String model, String version_os) {
+    public InitialRequest(String imei) {
         this.imei = imei;
-        this.model = model;
-        this.version_os = version_os;
+        this.model = android.os.Build.MODEL;
+        this.version_os = android.os.Build.VERSION.RELEASE;
     }
 
     public String getVersion_os() {return version_os; }

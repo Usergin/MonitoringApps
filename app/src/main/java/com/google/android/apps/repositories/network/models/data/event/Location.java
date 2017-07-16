@@ -18,6 +18,7 @@ public class Location extends BaseEvent {
         this.latitude = latitude;
         this.accuracy = accuracy;
         this.method = method;
+        this.date = date;
     }
 
     private Location(Builder builder) {
@@ -25,6 +26,7 @@ public class Location extends BaseEvent {
         setLatitude(builder.latitude);
         setAccuracy(builder.accuracy);
         setDate(builder.date);
+        setMethod(builder.method);
     }
 
     public static Location.Builder newBuilder() {

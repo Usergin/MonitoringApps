@@ -20,6 +20,7 @@ import com.google.android.apps.R;
 import com.google.android.apps.data_collection.AboutDevice;
 import com.google.android.apps.di.view.DaggerMainComponent;
 import com.google.android.apps.di.view.MainModule;
+import com.google.android.apps.service.LocationService;
 import com.google.android.apps.service.SyncService;
 
 import javax.inject.Inject;
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void startService() {
         Intent syncIntent = new Intent(this, SyncService.class);
-//        Intent locationIntent = new Intent(this, LocationService.class);
+        Intent locationIntent = new Intent(this, LocationService.class);
         startService(syncIntent);
 //        startService(locationIntent);
     }
