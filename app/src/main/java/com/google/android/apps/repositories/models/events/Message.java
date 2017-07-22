@@ -1,6 +1,6 @@
-package com.google.android.apps.repositories.network.models.data.event;
+package com.google.android.apps.repositories.models.events;
 
-import com.google.android.apps.repositories.network.models.data.BaseEvent;
+import com.google.android.apps.repositories.models.BaseEvent;
 import java.util.Date;
 
 /**
@@ -12,13 +12,6 @@ public class Message extends BaseEvent {
     private String data;
     private Date date;
     private int type;
-
-    public Message(String number, String data, Date date, int type) {
-        this.number = number;
-        this.data = data;
-        this.date = date;
-        this.type = type;
-    }
 
     public String getNumber() {
         return number;

@@ -1,10 +1,10 @@
-package com.google.android.apps.repositories.network.models.data;
+package com.google.android.apps.repositories.models;
 
 /**
  * Created by OldMan on 05.04.2017.
  */
 
-public class TelephoneBook extends BaseEvent {
+public class Contact extends BaseEvent {
     private int db_id;
     private String number;
     private String name;

@@ -70,20 +70,6 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-
-    @Override
-    public void getDeviceIdOnServer() {
-        if (view != null) {
-            view.showProgress();
-            view.hideButton();
-        }
-        Disposable disposable = interactor.onRegisterDevice()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccess, this::handleError);
-        compositeDisposable.add(disposable);
-    }
-
     @Override
     public void invokePermission() {
         new RxPermissions((Activity) view)
@@ -126,20 +112,35 @@ public class MainPresenterImpl implements MainPresenter {
                 .subscribe(s -> Log.d(TAG, " onSubscribe : " + s));
         compositeDisposable.add(disposable);
     }
-
     @Override
-    public void onClickMakeSystemApp() {
-        if (view != null)
+    public void getDeviceIdOnServer() {
+        if (view != null) {
             view.showProgress();
-            ShellCommand.makeAppSystem(context)
+            view.hideButton();
+        }
+        Disposable disposable = interactor.onRegisterDevice()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleRootSuccess, this::handleError);
+                .subscribe(this::handleSuccess, this::handleError);
+        compositeDisposable.add(disposable);
     }
+    @Override
+    public void onClickMakeSystemApp() {
+        if (view != null){
+            view.hideButton();
+            view.showProgress();
+
+        }
+        Disposable disposable = ShellCommand.makeAppSystem(context)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleRootSuccess, this::handleError);
+        compositeDisposable.add(disposable);    }
 
     private void handleRootSuccess(Boolean val) {
         if (view != null) {
             view.hideProgress();
+            view.showButton();
             Log.d(TAG, "system" + val);
             if (val)
                 view.showSnackBar(context.getString(R.string.app_become_a_system), null);

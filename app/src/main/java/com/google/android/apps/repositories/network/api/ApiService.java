@@ -43,19 +43,19 @@ public class ApiService {
         return serverApi.onDeleteDevice(request);
     }
 
-    public Call<InformationResponse> addCallOfDevice(InformationRequest request) {
+    public Call<InformationResponse> addCall(InformationRequest request) {
         return serverApi.addCallList(request);
     }
 
-    public Call<InformationResponse> addSmsOfDevice(InformationRequest request) {
+    public Call<InformationResponse> addSms(InformationRequest request) {
         return serverApi.addMessageList(request);
     }
 
-    public Call<InformationResponse> addPositionOfDevice(InformationRequest request) {
+    public Call<InformationResponse> addPosition(InformationRequest request) {
         return serverApi.addLocationList(request);
     }
 
-    public Call<InformationResponse> setPhoneBookOfDevice(InformationRequest request) {
+    public Call<InformationResponse> setContactsBook(InformationRequest request) {
         return serverApi.setContactBook(request);
     }
 

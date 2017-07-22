@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.android.apps.repositories.network.models.data.DeviceInfo;
-import com.google.android.apps.repositories.network.models.data.Settings;
+import com.google.android.apps.repositories.models.DeviceInfo;
+import com.google.android.apps.repositories.models.Settings;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;

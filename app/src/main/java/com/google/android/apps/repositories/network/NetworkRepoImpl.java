@@ -2,8 +2,8 @@ package com.google.android.apps.repositories.network;
 
 
 import com.google.android.apps.repositories.network.api.ApiService;
-import com.google.android.apps.repositories.network.models.data.BaseEvent;
-import com.google.android.apps.repositories.network.models.data.DeviceInfo;
+import com.google.android.apps.repositories.models.BaseEvent;
+import com.google.android.apps.repositories.models.DeviceInfo;
 import com.google.android.apps.repositories.network.models.request.DeleteRequest;
 import com.google.android.apps.repositories.network.models.request.DeviceInfoRequest;
 import com.google.android.apps.repositories.network.models.request.InformationRequest;
@@ -64,40 +64,39 @@ public class NetworkRepoImpl implements NetworkRepo {
     }
 
     @Override
-    public Single<InformationResponse> addPositionOfDevice(BaseEvent data) {
+    public Single<InformationResponse> addPosition(BaseEvent data) {
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.addPositionOfDevice(informationRequest));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addPosition(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addCallOfDevice(BaseEvent data) {
+    public Single<InformationResponse> addCall(BaseEvent data) {
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCallOfDevice(informationRequest));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCall(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addSMSOfDevice(BaseEvent data) {
+    public Single<InformationResponse> addSms(BaseEvent data) {
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSmsOfDevice(informationRequest));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSms(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addCallListOfDevice(List<BaseEvent> dataList) {
+    public Single<InformationResponse> addCallsList(List<BaseEvent> dataList) {
         InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCallOfDevice(informationRequest));
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addCall(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addSMSListOfDevice(List<BaseEvent> dataList) {
+    public Single<InformationResponse> addSMSList(List<BaseEvent> dataList) {
         InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
-        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSmsOfDevice(informationRequest));
-
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.addSms(informationRequest));
     }
 
     @Override
@@ -109,20 +108,19 @@ public class NetworkRepoImpl implements NetworkRepo {
     }
 
     @Override
-    public Single<InformationResponse> setPhoneBookOfDevice(List<BaseEvent> dataList, long date) {
-//        OneTimeRequest informationRequest = new OneTimeRequest(dataList, imei, device, date);
-//        return RxRetrofitUtils.wrapRetrofitCall(apiService.setPhoneBookOfDevice(informationRequest));
-        return null;
+    public Single<InformationResponse> setContactsBook(List<BaseEvent> dataList) {
+        InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
+        return RxRetrofitUtils.wrapRetrofitCall(apiService.setContactsBook(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addListAppOfDevice(List<BaseEvent> dataList) {
+    public Single<InformationResponse> addListApplications(List<BaseEvent> dataList) {
         InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
         return RxRetrofitUtils.wrapRetrofitCall(apiService.addAppOfDevice(informationRequest));
     }
 
     @Override
-    public Single<InformationResponse> addAppOfDevice(BaseEvent data) {
+    public Single<InformationResponse> addApplication(BaseEvent data) {
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);

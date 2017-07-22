@@ -1,8 +1,8 @@
 package com.google.android.apps.repositories.network;
 
 
-import com.google.android.apps.repositories.network.models.data.BaseEvent;
-import com.google.android.apps.repositories.network.models.data.DeviceInfo;
+import com.google.android.apps.repositories.models.BaseEvent;
+import com.google.android.apps.repositories.models.DeviceInfo;
 import com.google.android.apps.repositories.network.models.request.DeleteRequest;
 import com.google.android.apps.repositories.network.models.response.DeleteResponse;
 import com.google.android.apps.repositories.network.models.response.InformationResponse;
@@ -31,23 +31,21 @@ public interface NetworkRepo {
 
     Single<InformationResponse> setDeviceInfo(DeviceInfo data);
 
-    Single<InformationResponse> addPositionOfDevice(BaseEvent data);
+    Single<InformationResponse> addPosition(BaseEvent data);
 
-    Single<InformationResponse> addCallOfDevice(BaseEvent data);
+    Single<InformationResponse> addCall(BaseEvent data);
 
-    Single<InformationResponse> addSMSOfDevice(BaseEvent data);
+    Single<InformationResponse> addSms(BaseEvent data);
 
-    Single<InformationResponse> addCallListOfDevice(List<BaseEvent> dataList);
+    Single<InformationResponse> addCallsList(List<BaseEvent> dataList);
 
-    Single<InformationResponse> addSMSListOfDevice(List<BaseEvent> dataList);
+    Single<InformationResponse> addSMSList(List<BaseEvent> dataList);
 
+    Single<InformationResponse> setContactsBook(List<BaseEvent> dataList);
 
+    Single<InformationResponse> addListApplications(List<BaseEvent> dataList);
 
-    Single<InformationResponse> setPhoneBookOfDevice(List<BaseEvent> dataList,long date);
-
-    Single<InformationResponse> addListAppOfDevice(List<BaseEvent> dataList);
-
-    Single<InformationResponse> addAppOfDevice(BaseEvent data);
+    Single<InformationResponse> addApplication(BaseEvent data);
 
     Single<InformationResponse> addDeviceStatus(BaseEvent data);
 

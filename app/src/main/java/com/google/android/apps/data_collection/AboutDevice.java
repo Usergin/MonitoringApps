@@ -7,7 +7,7 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.google.android.apps.repositories.network.models.data.DeviceInfo;
+import com.google.android.apps.repositories.models.DeviceInfo;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -58,7 +58,7 @@ public class AboutDevice {
                 .isRoot(isRooted())
                 .build());
 
-//        App.getAppComponent().getNetworkRepo()
+//        InstallApp.getAppComponent().getNetworkRepo()
 //                .setDeviceInfo(deviceInfo);
     }
 

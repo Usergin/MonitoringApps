@@ -1,6 +1,6 @@
-package com.google.android.apps.repositories.network.models.data.event;
+package com.google.android.apps.repositories.models.events;
 
-import com.google.android.apps.repositories.network.models.data.BaseEvent;
+import com.google.android.apps.repositories.models.BaseEvent;
 import java.util.Date;
 
 /**
@@ -13,12 +13,12 @@ public class Call extends BaseEvent {
     private Date date;
     private int type;
 
-    public Call(String number, int duration, Date date, int type) {
-        this.number = number;
-        this.duration = duration;
-        this.date = date;
-        this.type = type;
-    }
+//    public Call(String number, int duration, Date date, int type) {
+//        this.number = number;
+//        this.duration = duration;
+//        this.date = date;
+//        this.type = type;
+//    }
 
     public int getType() {
         return type;

@@ -1,6 +1,6 @@
-package com.google.android.apps.repositories.network.models.data.event;
+package com.google.android.apps.repositories.models.events;
 
-import com.google.android.apps.repositories.network.models.data.BaseEvent;
+import com.google.android.apps.repositories.models.BaseEvent;
 import java.util.Date;
 
 /**

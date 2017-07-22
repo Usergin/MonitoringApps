@@ -5,50 +5,39 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationListener;
+import android.location.Address;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-
 import com.google.android.apps.App;
-import com.google.android.apps.repositories.network.models.data.event.Location;
-import com.google.android.apps.utils.Constants;
 import com.google.android.apps.utils.Preferences;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.patloew.rxlocation.RxLocation;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
-import timber.log.Timber;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class LocationService extends Service implements LocationListener {
-   private final String TAG = LocationService.class.getSimpleName();
+public class LocationService extends Service {
+    private final String TAG = LocationService.class.getSimpleName();
+    private static final int SERVICE_REQUEST_CODE = 15;
 
     protected LocationManager locationManager;
-    private Context context;
     private Preferences preferences;
-    private int locationMode;
-    private boolean isGPSProvider;
-    private boolean isNetworkProvider;
-    private boolean isPassiveProvider;
-    private static final int SERVICE_REQUEST_CODE = 15;
-    // The minimum distance to change Updates in meters
-    private final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 50; // 100
-    float bestAccuracy = 1000; // meters
-    private final long MIN_TIME_UPDATES = 1000 * 60 * 5;
-    private static long MIN_TIME_LAST_UPDATES = 1000 * 60 * 60 * 24; // 24 hour
-
-    private final int RESTART_SERVICE = 1000 * 60 * 5;
+    private RxLocation rxLocation;
+    private LocationRequest locationRequest;
 
     @Override
     public void onCreate() {
-        context = App.getAppComponent().getContext();
         preferences = App.getAppComponent().getPreferences();
     }
 
@@ -60,127 +49,125 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.tag(LocationService.class.getSimpleName());
-        Timber.d("onStartCommand ");
+        Log.d(TAG, "onStartCommand " + preferences.isLocation());
+        if (preferences.isLocation()) {
+            rxLocation = new RxLocation(this);
+            startTracker();
+        }
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, preferences.getLocationUpdateTime());
+        cal.add(Calendar.SECOND, 15);
         PendingIntent servicePendingIntent = PendingIntent.getService(this,
                 SERVICE_REQUEST_CODE, new Intent(this, LocationService.class),// SERVICE_REQUEST_CODE
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                 servicePendingIntent);
-
-        if (preferences.isLocation())
-            startTracker();
         super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
     }
 
     private void startTracker() {
         try {
-            locationMode = preferences.getLocationMode();
-            locationManager = (LocationManager) context
-                    .getSystemService(LOCATION_SERVICE);
+            int locationMode = preferences.getLocationMode();
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            Log.d(TAG, "locationMode " + locationMode);
 
-
-            Timber.d("GetLocation ");
             // getting GPS status
-            boolean isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
-            Timber.d("isGPS " + Boolean.toString(isGPSEnabled));
-            // getting network
-            boolean isNetworkProviderEnable = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//            boolean isGPSEnabled = locationManager
+//                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+//            Log.d(TAG, "isGPS " + Boolean.toString(isGPSEnabled));
+//            // getting network
+//            boolean isNetworkProviderEnable = locationManager
+//                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//
+//            boolean isPassiveProviderEnable = locationManager
+//                    .isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
 
-            boolean isPassiveProviderEnable = locationManager
-                    .isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
+//            isGPSProvider = locationMode == Constants.GPS_PROVIDER && isGPSEnabled;
+//            isNetworkProvider = locationMode == Constants.NETWORK_PROVIDER && isNetworkProviderEnable;
+//            isPassiveProvider = locationMode == Constants.PASSIVE_PROVIDER && isPassiveProviderEnable;
 
-            isGPSProvider = locationMode == Constants.GPS_PROVIDER && isGPSEnabled;
-            isNetworkProvider = locationMode == Constants.NETWORK_PROVIDER && isNetworkProviderEnable;
-            isPassiveProvider = locationMode == Constants.PASSIVE_PROVIDER && isPassiveProviderEnable;
-
-            if (!isGPSProvider && !isNetworkProvider && !isPassiveProvider) {
-                // no location provider is enabled
-                return;
-            } else {
-                if (isGPSProvider) {
-                    Timber.d("GPS Enabled");
-                    setGPSLocation();
-                }
-                if (isNetworkProvider) {
-                    if (isOnline())
-                        setNetworkLocation();
-                }
-                if (isPassiveProvider)
-                    setPassiveLocation();
-                getLast();
+            switch (locationMode) {
+                case 0:
+//                    initHighAccuracyLocation()
+//                            .flatMapObservable(this::getAddressObservable)
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe(this::onAddressUpdate, throwable -> Log.e("MainPresenter", "Error fetching location/address updates", throwable))
+                    ;
+                    break;
+                case 1:
+                    initBalancedPowerLocation().doAfterSuccess(locationSettingsResult -> Log.d(TAG, locationSettingsResult.getStatus().toString()));
+                    break;
+                case 2:
+                    initNoPowerLocation().doAfterSuccess(locationSettingsResult -> Log.d(TAG, locationSettingsResult.getStatus().toString()));
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void getLast() {
-        android.location.Location bestResult = null;
-        android.location.Location location = null;
-        double latitude = 0;
-        double longitude = 0;
-        String bestProvider = null;
+    private <R> void onAddressUpdate(R r) {
 
-        float accuracy = 0;
-        long time = 0;
-        long bestTime = 0;
-        float bestAccuracy = 1000;
-        long minTime = 0;
-        List<String> matchingProviders = locationManager.getAllProviders();
-        Timber.d("LocMan " + matchingProviders.toString());
-        for (String provider : matchingProviders) {
-            try {
-                location = locationManager.getLastKnownLocation(provider);
-            } catch (java.lang.SecurityException ex) {
-                Timber.d("fail to request location update, ignore", ex);
-            }
-            if (location != null) {
-                accuracy = location.getAccuracy();
-                time = location.getTime();
+    }
 
-                Timber.d("last update " + provider);
-                long timeSys = System.currentTimeMillis();
-                minTime = timeSys - MIN_TIME_LAST_UPDATES;
+    private Observable<Address> getAddressObservable(boolean success) {
+        if (success) {
+            return rxLocation.location().updates(locationRequest)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(location -> onLocationUpdate(location))
+                    .flatMap(this::getAddressFromLocation);
 
-                Timber.d("time + accuracy " + Long.toString(time) + " " + Float.toString(accuracy));
-                if ((time > minTime && accuracy < bestAccuracy)) {
-                    bestResult = location;
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
-                    bestAccuracy = accuracy;
-                    bestTime = time;
-                    bestProvider = provider;
-                    Timber.d("bestAccuracy: " + bestTime + " " + accuracy + " " + bestResult);
-                } else if (time < minTime && bestAccuracy == Float.MAX_VALUE
-                        && time > bestTime) {
-                    bestResult = location;
-                    bestTime = time;
-                    bestProvider = provider;
-                    bestAccuracy = accuracy;
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
-                    Timber.d("else " + Long.toString(bestTime) + " " + bestResult);
-                }
-            }
-
+        } else {
+            return rxLocation.location().lastLocation()
+                    .doOnSuccess(location -> Log.d(TAG, location.toString()))
+                    .flatMapObservable(this::getAddressFromLocation);
         }
+    }
 
-        Location position = Location.newBuilder()
-                .longitude(longitude)
-                .latitude(latitude)
-                .accuracy(accuracy)
-                .date(new Date(time))
-                .method(bestProvider).build();
-        sendData(position);
+    private Observable<Address> getAddressFromLocation(Location location) {
+        return rxLocation.geocoding().fromLocation(location).toObservable()
+                .subscribeOn(Schedulers.io());
+    }
+
+    private Single<LocationSettingsResult> initHighAccuracyLocation() {
+        locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(5000);
+        return rxLocation.settings().check(locationRequest);
+    }
+
+    private Single<LocationSettingsResult> initBalancedPowerLocation() {
+        locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setInterval(5000);
+        return rxLocation.settings().check(locationRequest);
+
+    }
+
+    private void onLocationUpdate(Location location) {
+        Log.d(TAG, location.getLatitude() + ", " + location.getLongitude());
+    }
+
+    private Single<LocationSettingsResult> initNoPowerLocation() {
+        locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_NO_POWER)
+                .setInterval(5000);
+        return rxLocation.settings().check(locationRequest);
+
+    }
+
+    private void getLast() {
+
+//        Location position = Location.newBuilder()
+//                .longitude(longitude)
+//                .latitude(latitude)
+//                .accuracy(accuracy)
+//                .date(new Date(time))
+//                .method(bestProvider).build();
+//        sendData(position);
     }
 
     private boolean isOnline() {
@@ -189,74 +176,9 @@ public class LocationService extends Service implements LocationListener {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private void setGPSLocation() {
-        // locMetod = "network";
-        Timber.d("GPS Location");
-        try {
-            Timber.d("GPS Location OK");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    MIN_TIME_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        } catch (java.lang.SecurityException ex) {
-            Timber.d("fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Timber.d("network provider does not exist, " + ex.getMessage());
-        }
-    }
-
-    public void setNetworkLocation() {
-        try {
-            Timber.d("Network Location OK");
-            locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, MIN_TIME_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        } catch (java.lang.SecurityException ex) {
-            Timber.d("fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Timber.d("network provider does not exist, " + ex.getMessage());
-        }
-    }
-
-    public void setPassiveLocation() {
-        try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.PASSIVE_PROVIDER, MIN_TIME_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        } catch (java.lang.SecurityException ex) {
-            Timber.d("fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Timber.d("network provider does not exist, " + ex.getMessage());
-        }
-
-    }
 
     private void sendData(Location position) {
-        App.getAppComponent().getNetworkRepo()
-                .addPositionOfDevice(position);
+//        App.getAppComponent().getNetworkRepo()
+//                .addPosition(position);
     }
-
-
-    @Override
-    public void onLocationChanged(android.location.Location location) {
-        Log.d(TAG, "onLocationChanged " + location);
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(TAG, "onStatusChanged " + provider + " " + status + " " + extras);
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Log.d(TAG, "onProviderEnabled " + provider );
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
 }

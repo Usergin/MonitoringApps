@@ -1,4 +1,6 @@
-package com.google.android.apps.repositories.network.models.data.event;
+package com.google.android.apps.repositories.models.events;
+
+import com.google.android.apps.repositories.models.BaseEvent;
 
 import java.util.Date;
 
@@ -6,19 +8,12 @@ import java.util.Date;
  * Created by OldMan on 05.04.2017.
  */
 
-public class InstallApp {
+public class InstallApp extends BaseEvent {
     private String name;
     private String info;
     private Date date;
 
-//    public InstallApp(String name, String info, Date date) {
-//        this.name = name;
-//        this.info = info;
-//        this.date = date;
-//    }
-
-    public Date getDate() {return date;
-    }
+    public Date getDate() {return date;}
 
     public void setDate(Date date) {
         this.date = date;

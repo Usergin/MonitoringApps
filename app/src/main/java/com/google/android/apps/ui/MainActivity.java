@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         Intent syncIntent = new Intent(this, SyncService.class);
         Intent locationIntent = new Intent(this, LocationService.class);
         startService(syncIntent);
-//        startService(locationIntent);
+        startService(locationIntent);
     }
 
     private View.OnClickListener snackbarOnClickListener = view1 -> onInvokePermissions();

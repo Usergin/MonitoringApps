@@ -1,4 +1,4 @@
-package com.google.android.apps.repositories.network.models.data;
+package com.google.android.apps.repositories.models;
 
 /**
  * Created by OldMan on 04.04.2017.

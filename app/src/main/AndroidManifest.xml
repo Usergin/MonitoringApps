@@ -1,67 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.apps">
+<manifest package="com.google.android.apps"
+          xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- privileged permission-->
     <!-- @SystemApi Allows an application to read or write the secure system data.
    <p>Not for use by third-party applications. -->
-    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_WIFI_CREDENTIAL" />
-    <uses-permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" />
-    <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
-    <uses-permission android:name="android.permission.DUMP" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_WIFI_CREDENTIAL"/>
+    <uses-permission android:name="android.permission.OVERRIDE_WIFI_CONFIG"/>
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE"/>
+    <uses-permission android:name="android.permission.DUMP"/>
+    <uses-permission android:name="android.permission.CALL_PRIVILEGED"/>
 
     <!-- @SystemApi Allows modification of the telephony state - power on, mmi, etc.
         Does not include placing calls.
         <p>Not for use by third-party applications. -->
-    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>
     <!-- @SystemApi Allows an application to modify the Google service map.
      <p>Not for use by third-party applications. -->
-    <uses-permission android:name="android.permission.WRITE_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_GSERVICES"/>
     <!-- @SystemApi Allows mounting and unmounting file systems for removable storage.
      <p>Not for use by third-party applications.-->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- @SystemApi Allows access to the list of accounts in the Accounts Service. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED"/>
     <!-- @SystemApi Allows an application to call the activity manager shutdown() API
        to put the higher-level system there into a shutdown state.
        @hide -->
-    <uses-permission android:name="android.permission.SHUTDOWN" />
+    <uses-permission android:name="android.permission.SHUTDOWN"/>
     <!-- @SystemApi Required to add or remove another application as a device admin.
         <p>Not for use by third-party applications.
         @hide -->
-    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS"/>
     <!-- @SystemApi Allows an application to move location of installed package.
      @hide -->
-    <uses-permission android:name="android.permission.MOVE_PACKAGE" />
+    <uses-permission android:name="android.permission.MOVE_PACKAGE"/>
     <!-- @SystemApi Required to be able to reboot the device.
     <p>Not for use by third-party applications. -->
-    <uses-permission android:name="android.permission.REBOOT" />
+    <uses-permission android:name="android.permission.REBOOT"/>
     <!-- <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" /> -->
     <!-- <uses-feature android:name="android.hardware.telephony"/> -->
     <!-- <uses-feature android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/> -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/> -->
     <!-- For sending sms/call tiles in the future -->
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <!-- For sending/receiving events -->
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <!-- For sending geo tiles in the future -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- For turn on/off  tiles in the future -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <!-- // privileged -->
     <!--<uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" -->
@@ -70,67 +71,69 @@
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-         <activity
+        <!--android:largerHeap ="true"-->
+
+        <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".receiver.ReceiverOnBootCompleted"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.REBOOT" />
-                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-                <action android:name="android.intent.action.AIRPLANE_MODE" />
-                <action android:name="android.intent.action.SCREEN_ON" />
-                <action android:name="android.intent.action.SCREEN_OFF" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="android.intent.action.ACTION_BATTERY_LOW" />
-                <action android:name="android.intent.action.ACTION_BATTERY_OKAY" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.ReceiverOnCall"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <!--android:enabled="true"-->
-            <!--android:exported="false"-->
+            android:enabled="true"
+            android:exported="true">
+            <!--android:permission="android.permission.BIND_DEVICE_ADMIN"-->
             <!-- android:permission="android.permission.READ_PRIVILEGED_PHONE_STATE"> -->
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.PHONE_STATE" />
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.ReceiverOnSms"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="1000">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
-                <data android:mimeType="application/vnd.wap.mms-message" />
-                <action android:name="com.android.mms.transaction.MESSAGE_SENT" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED"/>
+
+                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <action android:name="com.android.mms.transaction.MESSAGE_SENT"/>
             </intent-filter>
         </receiver>
-        <service
-            android:name=".service.SyncService"
-           />
 
         <service
-            android:name=".service.LocationService"
-            android:enabled="true"
-            android:exported="false" />
+            android:name=".service.SyncService"/>
+
+        <service
+            android:name=".service.LocationService"/>
     </application>
 
 </manifest>

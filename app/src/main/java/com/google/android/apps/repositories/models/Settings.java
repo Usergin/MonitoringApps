@@ -1,4 +1,4 @@
-package com.google.android.apps.repositories.network.models.data;
+package com.google.android.apps.repositories.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by OldMan on 05.04.2017.
  */
-
+//// TODO: 19.07.2017 add location_update_times
 public class Settings {
     @SerializedName("location")
     @Expose

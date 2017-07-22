@@ -1,6 +1,6 @@
 package com.google.android.apps.repositories.network.models.response;
 
-import com.google.android.apps.repositories.network.models.data.Settings;
+import com.google.android.apps.repositories.models.Settings;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -1,6 +1,6 @@
 package com.google.android.apps.repositories.network.models.request;
 
-import com.google.android.apps.repositories.network.models.data.DeviceInfo;
+import com.google.android.apps.repositories.models.DeviceInfo;
 
 /**
  * Created by OldMan on 08.07.2017.
