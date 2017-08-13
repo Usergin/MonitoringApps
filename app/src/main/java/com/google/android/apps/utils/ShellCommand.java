@@ -7,6 +7,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.android.apps.App;
 import com.google.android.apps.ui.MainActivity;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class ShellCommand {
         String systemPrivAppDir = "/system/priv-app/";
         String systemAppDir = "/system/app/";
         String appPath = "/data/app/" + appName;
-
+//        Single.just(runCommandWait("mount -o remount,rw /system", true))
         // Подключаем /system в режиме чтения-записи
         if (!runCommandWait("mount -o remount,rw /system", true)) {
             Log.e(TAG, "makeAppSystem: Can't mount /system");
@@ -196,11 +197,11 @@ public class ShellCommand {
     /*
     ToDo WHAT -c
      */
-    static public Single<Boolean> setAirplaneMode(int val, Context context) {
+    static public Single<Boolean> setAirplaneMode(int val) {
         Log.d(TAG, "setAirplaneMode");
         String COMMAND_FLIGHT_MODE_1 = "-c settings put global airplane_mode_on";
         String COMMAND_FLIGHT_MODE_2 = "-c am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
-        boolean state = isAirplaneMode(context);
+        boolean state = isAirplaneMode(App.getAppComponent().getContext());
         switch (val) {
             case 1:
                 // Set Airplane / Flight mode using su commands.

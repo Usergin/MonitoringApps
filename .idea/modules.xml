@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GoogleApps.iml" filepath="$PROJECT_DIR$/GoogleApps.iml" />
       <module fileurl="file://$PROJECT_DIR$/MonitoringApps.iml" filepath="$PROJECT_DIR$/MonitoringApps.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -15,17 +14,18 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.apps.App;
+import com.google.android.apps.repositories.models.events.Position;
+import com.google.android.apps.utils.DateUtils;
 import com.google.android.apps.utils.Preferences;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.patloew.rxlocation.RxLocation;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Maybe;
+import ru.solodovnikov.rx2locationmanager.LocationRequestBuilder;
+import ru.solodovnikov.rx2locationmanager.LocationTime;
+import ru.solodovnikov.rx2locationmanager.RxLocationManager;
+import timber.log.Timber;
 
 public class LocationService extends Service {
     private final String TAG = LocationService.class.getSimpleName();
@@ -33,8 +33,8 @@ public class LocationService extends Service {
 
     protected LocationManager locationManager;
     private Preferences preferences;
-    private RxLocation rxLocation;
-    private LocationRequest locationRequest;
+    private RxLocationManager rxLocationManager;
+    private LocationRequestBuilder locationRequestBuilder;
 
     @Override
     public void onCreate() {
@@ -51,7 +51,8 @@ public class LocationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand " + preferences.isLocation());
         if (preferences.isLocation()) {
-            rxLocation = new RxLocation(this);
+            rxLocationManager = new RxLocationManager(this);
+            locationRequestBuilder = new LocationRequestBuilder(this);
             startTracker();
         }
 
@@ -91,16 +92,18 @@ public class LocationService extends Service {
             switch (locationMode) {
                 case 0:
 //                    initHighAccuracyLocation()
+                    initBalancedPowerLocation();
+//                            .doOnSubscribe(locationSettingsResult -> Log.d(TAG, locationSettingsResult.getStatus().getStatusMessage()))
 //                            .flatMapObservable(this::getAddressObservable)
 //                            .observeOn(AndroidSchedulers.mainThread())
 //                            .subscribe(this::onAddressUpdate, throwable -> Log.e("MainPresenter", "Error fetching location/address updates", throwable))
                     ;
                     break;
                 case 1:
-                    initBalancedPowerLocation().doAfterSuccess(locationSettingsResult -> Log.d(TAG, locationSettingsResult.getStatus().toString()));
+                    initBalancedPowerLocation();
                     break;
                 case 2:
-                    initNoPowerLocation().doAfterSuccess(locationSettingsResult -> Log.d(TAG, locationSettingsResult.getStatus().toString()));
+                    initNoPowerLocation();
                     break;
             }
         } catch (Exception e) {
@@ -112,62 +115,60 @@ public class LocationService extends Service {
 
     }
 
-    private Observable<Address> getAddressObservable(boolean success) {
-        if (success) {
-            return rxLocation.location().updates(locationRequest)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(location -> onLocationUpdate(location))
-                    .flatMap(this::getAddressFromLocation);
+    private void initHighAccuracyLocation() {
+       locationRequestBuilder
+                .addLastLocation(LocationManager.GPS_PROVIDER, new LocationTime(30, TimeUnit.MINUTES))
+                .addRequestLocation(LocationManager.GPS_PROVIDER, new LocationTime(40, TimeUnit.SECONDS))
+                .setDefaultLocation(new Location(LocationManager.GPS_PROVIDER))
+                .create()
+                .subscribe(this::sendData,
+                        throwable -> Log.d(TAG, "error: " + throwable),
+                        () -> {
+                            final String pattern = "%s Completed:";
+                            Log.d(TAG, String.format(pattern, "r"));
+                        });
+        ;
 
-        } else {
-            return rxLocation.location().lastLocation()
-                    .doOnSuccess(location -> Log.d(TAG, location.toString()))
-                    .flatMapObservable(this::getAddressFromLocation);
-        }
+//        testSubscribe(maybe, "requestBuild");
+//        return rxLocation.settings().check(locationRequest);
     }
 
-    private Observable<Address> getAddressFromLocation(Location location) {
-        return rxLocation.geocoding().fromLocation(location).toObservable()
-                .subscribeOn(Schedulers.io());
-    }
+    private void initBalancedPowerLocation() {
+      locationRequestBuilder
+                .addLastLocation(LocationManager.NETWORK_PROVIDER, new LocationTime(30, TimeUnit.MINUTES))
+                .addRequestLocation(LocationManager.NETWORK_PROVIDER, new LocationTime(40, TimeUnit.SECONDS))
+                .setDefaultLocation(new Location(LocationManager.PASSIVE_PROVIDER))
+                .create()
 
-    private Single<LocationSettingsResult> initHighAccuracyLocation() {
-        locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000);
-        return rxLocation.settings().check(locationRequest);
-    }
-
-    private Single<LocationSettingsResult> initBalancedPowerLocation() {
-        locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(5000);
-        return rxLocation.settings().check(locationRequest);
-
-    }
-
-    private void onLocationUpdate(Location location) {
-        Log.d(TAG, location.getLatitude() + ", " + location.getLongitude());
-    }
-
-    private Single<LocationSettingsResult> initNoPowerLocation() {
-        locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_NO_POWER)
-                .setInterval(5000);
-        return rxLocation.settings().check(locationRequest);
+                .subscribe(this::sendData,
+                throwable -> Log.d(TAG, "error: " + throwable),
+                () -> {
+                    final String pattern = "%s Completed:";
+                    Log.d(TAG, String.format(pattern, "r"));
+                });
+//        testSubscribe(maybe, "requestBuild");
 
     }
 
-    private void getLast() {
 
-//        Location position = Location.newBuilder()
-//                .longitude(longitude)
-//                .latitude(latitude)
-//                .accuracy(accuracy)
-//                .date(new Date(time))
-//                .method(bestProvider).build();
-//        sendData(position);
+    private void initNoPowerLocation() {
+        final Maybe<Location> maybe = locationRequestBuilder
+                .addLastLocation(LocationManager.NETWORK_PROVIDER, new LocationTime(30, TimeUnit.MINUTES))
+                .addRequestLocation(LocationManager.PASSIVE_PROVIDER, new LocationTime(40, TimeUnit.SECONDS))
+                .setDefaultLocation(new Location(LocationManager.PASSIVE_PROVIDER))
+                .create();
+
+        testSubscribe(maybe, "requestBuild");
+
+    }
+
+    private void testSubscribe(Maybe<Location> maybe, final String methodName) {
+        maybe.subscribe(t -> Log.d(TAG, t + " " + methodName),
+                throwable -> Log.d(TAG, throwable + " " + methodName),
+                () -> {
+                    final String pattern = "%s Completed:";
+                    Log.d(TAG, String.format(pattern, methodName));
+                });
     }
 
     private boolean isOnline() {
@@ -177,8 +178,19 @@ public class LocationService extends Service {
     }
 
 
-    private void sendData(Location position) {
-//        App.getAppComponent().getNetworkRepo()
-//                .addPosition(position);
+    private void sendData(Location location) {
+        Log.d(TAG, location.toString());
+        if (Double.compare(location.getLatitude(), location.getLongitude()) != 0) {
+            Log.d(TAG, "sendData");
+            Position position = Position.newBuilder()
+                    .longitude(location.getLongitude())
+                    .latitude(location.getLatitude())
+                    .accuracy(location.getAccuracy())
+                    .date(DateUtils.convertMilliSecondsToFormattedDate(location.getTime()))
+                    .method(location.getProvider()).build();
+            App.getAppComponent().getNetworkRepo()
+                    .addPosition(position);
+        }
+
     }
 }

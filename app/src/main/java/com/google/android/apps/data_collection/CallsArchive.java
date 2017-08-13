@@ -36,7 +36,6 @@ public class CallsArchive {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Call call = new Call();
-
                 // String id = callLogCursor.getString(callLogCursor
                 // .getColumnIndex(CallLog.Calls._ID));
                 String name = cursor.getString(cursor
@@ -70,6 +69,7 @@ public class CallsArchive {
                         call.setType(Constants.MISSED_CALL);
                         break;
                 }
+                callList.add(call);
             }
             cursor.close();
         }

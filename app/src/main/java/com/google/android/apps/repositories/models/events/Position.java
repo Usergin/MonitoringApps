@@ -7,13 +7,13 @@ import java.util.Date;
  * Created by OldMan on 05.04.2017.
  */
 
-public class Location extends BaseEvent {
+public class Position extends BaseEvent {
     private double longitude, latitude;
     private float accuracy;
     private Date date;
     private String method;
 
-    public Location(double longitude, double latitude, float accuracy, Date date, String method) {
+    public Position(double longitude, double latitude, float accuracy, Date date, String method) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.accuracy = accuracy;
@@ -21,7 +21,7 @@ public class Location extends BaseEvent {
         this.date = date;
     }
 
-    private Location(Builder builder) {
+    private Position(Builder builder) {
         setLongitude(builder.longitude);
         setLatitude(builder.latitude);
         setAccuracy(builder.accuracy);
@@ -29,8 +29,8 @@ public class Location extends BaseEvent {
         setMethod(builder.method);
     }
 
-    public static Location.Builder newBuilder() {
-        return new Location.Builder();
+    public static Position.Builder newBuilder() {
+        return new Position.Builder();
     }
 
     public String getMethod() {
@@ -108,8 +108,8 @@ public class Location extends BaseEvent {
             return this;
         }
 
-        public Location build() {
-            return new Location(this);
+        public Position build() {
+            return new Position(this);
         }
 
     }

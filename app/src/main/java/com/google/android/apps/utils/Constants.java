@@ -6,7 +6,7 @@ package com.google.android.apps.utils;
 
 public class Constants {
     public final static int DIAGNOSTIC_PACKAGE = 1;
-    public final static int INCOMING_CALL = 2;
+    public final static int INCOMING_CALL = 22;
     public final static int OUTGOING_CALL = 3;
     public final static int MISSED_CALL = 4;
     public final static int INCOMING_SMS = 5;

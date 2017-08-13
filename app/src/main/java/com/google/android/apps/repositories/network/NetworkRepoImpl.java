@@ -1,6 +1,8 @@
 package com.google.android.apps.repositories.network;
 
 
+import android.util.Log;
+
 import com.google.android.apps.repositories.network.api.ApiService;
 import com.google.android.apps.repositories.models.BaseEvent;
 import com.google.android.apps.repositories.models.DeviceInfo;
@@ -28,6 +30,7 @@ import io.reactivex.Single;
  */
 
 public class NetworkRepoImpl implements NetworkRepo {
+    private static final String TAG = NetworkRepo.class.getSimpleName();
     private ApiService apiService;
     private Preferences preferences;
     private String imei;
@@ -65,6 +68,7 @@ public class NetworkRepoImpl implements NetworkRepo {
 
     @Override
     public Single<InformationResponse> addPosition(BaseEvent data) {
+        Log.d(TAG, "addPosition " + data);
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
@@ -73,6 +77,7 @@ public class NetworkRepoImpl implements NetworkRepo {
 
     @Override
     public Single<InformationResponse> addCall(BaseEvent data) {
+        Log.d(TAG, "addCall " + data);
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
@@ -81,6 +86,7 @@ public class NetworkRepoImpl implements NetworkRepo {
 
     @Override
     public Single<InformationResponse> addSms(BaseEvent data) {
+        Log.d(TAG, "addSms " + data);
         List<BaseEvent> list = new ArrayList<>();
         list.add(data);
         InformationRequest informationRequest = new InformationRequest(imei, device, list);
@@ -89,12 +95,14 @@ public class NetworkRepoImpl implements NetworkRepo {
 
     @Override
     public Single<InformationResponse> addCallsList(List<BaseEvent> dataList) {
+        Log.d(TAG, "addCallsList " + dataList.size());
         InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
         return RxRetrofitUtils.wrapRetrofitCall(apiService.addCall(informationRequest));
     }
 
     @Override
     public Single<InformationResponse> addSMSList(List<BaseEvent> dataList) {
+        Log.d(TAG, "addSMSList " + dataList.size());
         InformationRequest informationRequest = new InformationRequest(imei, device, dataList);
         return RxRetrofitUtils.wrapRetrofitCall(apiService.addSms(informationRequest));
     }

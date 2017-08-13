@@ -59,6 +59,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.google.dagger:dagger:2.10'
     // location
-    compile 'com.patloew.rxlocation:rxlocation:1.0.3'
+    compile 'com.github.zellius:rxlocationmanager-rxjava2:1.0.0'
+
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 }

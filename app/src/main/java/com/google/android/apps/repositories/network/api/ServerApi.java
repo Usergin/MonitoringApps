@@ -59,7 +59,7 @@ public interface ServerApi {
     @POST("/contact")
     Call<InformationResponse> setContactBook(@Body InformationRequest informationRequest);
 
-    @FormUrlEncoded
+    @Headers({"Accept: application/json"})
     @POST("/app")
     Call<InformationResponse> setInstallAppList(@Body InformationRequest informationRequest);
 
