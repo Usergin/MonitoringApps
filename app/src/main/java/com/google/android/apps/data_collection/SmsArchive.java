@@ -41,8 +41,7 @@ public class SmsArchive {
                     message = new Message();
                     int type = cursor.getInt(cursor
                             .getColumnIndex("type"));
-                    Log.d(TAG, "SMS Type : " + type);
-                    if (type == Telephony.Sms.MESSAGE_TYPE_INBOX)
+                     if (type == Telephony.Sms.MESSAGE_TYPE_INBOX)
                         message.setType(Constants.INCOMING_SMS);
                     else
                         message.setType(Constants.OUTGOING_SMS);
@@ -59,6 +58,8 @@ public class SmsArchive {
             }
             cursor.close();
         }
+        Log.d(TAG, "messageList : " + messageList.size());
+
         return Single.just(messageList);
     }
 }

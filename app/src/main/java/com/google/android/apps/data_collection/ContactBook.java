@@ -34,7 +34,7 @@ public class ContactBook {
                 null, null, null);
 
         if ((cursor != null ? cursor.getCount() : 0) > 0) {
-            while (cursor != null && cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Contact contact = new Contact();
                 StringBuilder infoBuilder = new StringBuilder();
                 // get contact id from device db
@@ -57,6 +57,7 @@ public class ContactBook {
                             null,
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID
                                     + " = ?", new String[]{String.valueOf(id)}, null);
+
                     while (numberCursor != null && numberCursor.moveToNext()) {
                         int type = numberCursor.getInt(numberCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                         String number = numberCursor
@@ -78,11 +79,10 @@ public class ContactBook {
                                 break;
                             default:
                                 infoBuilder.append("Доп.номер: ").append(' ').append(number);
-                                Log.d(TAG, "type number: " + type);
                                 break;
                         }
-                        numberCursor.close();
                     }
+                    numberCursor.close();
                 }
                 // -----------------------------------------------------------------------------
                 // get email and type
@@ -115,8 +115,8 @@ public class ContactBook {
                                 .append(' ')
                                 .append(label)
                                 .append('\n');
-                    emailCur.close();
                 }
+                emailCur.close();
                 contact.setE_mail(eMails.toString());
 
                 // -----------------------------------------------------------------------------
@@ -195,10 +195,13 @@ public class ContactBook {
                     orgCur.close();
                 }
                 contact.setInfo(infoBuilder.toString());
-                cursor.close();
                 contactList.add(contact);
             }
+            cursor.close();
+
         }
+        Log.d(TAG, "contactList : " + contactList.size());
+
         return Single.just(contactList);
     }
 

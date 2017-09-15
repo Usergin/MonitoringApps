@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.apps.App;
 import com.google.android.apps.R;
+import com.google.android.apps.data_collection.SmsArchive;
 import com.google.android.apps.repositories.network.models.response.InitialResponse;
 import com.google.android.apps.utils.ShellCommand;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -48,6 +49,10 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void onPause() {
 
+    }
+
+    public void onTestSubject() {
+        interactor.onSetHideIcon(true);
     }
 
     @Override

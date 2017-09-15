@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.google.android.apps.App;
 import com.google.android.apps.repositories.models.BaseEvent;
@@ -65,6 +66,8 @@ public class AppsArchive {
                 e.printStackTrace();
             }
         }
+        Log.d(TAG, "appsList : " + appsList.size());
+
         return Single.just(appsList);
     }
 }

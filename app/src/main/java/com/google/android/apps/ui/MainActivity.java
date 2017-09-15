@@ -79,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
         presenter.onClickMakeSystemApp();
     }
 
+    @Override
+    public void onPostResume() {
+        super.onPostResume();
+        presenter.onTestSubject();
+
+    }
+
     private InputFilter[] getIpFilter() {
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter() {

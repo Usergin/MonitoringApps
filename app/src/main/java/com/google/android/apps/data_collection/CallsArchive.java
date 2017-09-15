@@ -46,8 +46,6 @@ public class CallsArchive {
 
                 int isNew = cursor.getColumnIndex(CallLog.Calls.NEW);
 
-                Log.d(TAG, name + " " + cacheNumber + " " + isNew);
-
                 call.setNumber(cursor.getString(cursor
                         .getColumnIndex(CallLog.Calls.NUMBER)));
 
@@ -73,6 +71,8 @@ public class CallsArchive {
             }
             cursor.close();
         }
+        Log.d(TAG, "CallsArchive : " + callList.size());
+
         return Single.just(callList);
     }
 }

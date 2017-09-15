@@ -24,17 +24,33 @@ public class ShellCommand {
     private static final String appName = "com.google.android.apps";
     private static final int api = Build.VERSION.SDK_INT;
 
-    private static boolean runCommandWait(String cmd, boolean needsu) {
+    private static Single<Boolean> runCommandWait(String cmd, boolean needsu) {
         try {
             String su = "sh";
             if (needsu) {
                 su = "su";
             }
-
             Process process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
             int result = process.waitFor();
             Log.d("Shell", "result " + result);
-            return (result == 0);
+            return Single.just(result != 255);
+
+        } catch (IOException | InterruptedException e) {
+            Log.e("Shell", e.getLocalizedMessage());
+            return Single.just(false);
+        }
+    }
+
+    private static boolean runCommandWaits(String cmd, boolean needsu) {
+        try {
+            String su = "sh";
+            if (needsu) {
+                su = "su";
+            }
+            Process process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
+            int result = process.waitFor();
+            Log.d("Shell", "result " + result);
+            return result != 255;
 
         } catch (IOException | InterruptedException e) {
             Log.e("Shell", e.getLocalizedMessage());
@@ -74,31 +90,55 @@ public class ShellCommand {
         String appPath = "/data/app/" + appName;
 //        Single.just(runCommandWait("mount -o remount,rw /system", true))
         // Подключаем /system в режиме чтения-записи
-        if (!runCommandWait("mount -o remount,rw /system", true)) {
-            Log.e(TAG, "makeAppSystem: Can't mount /system");
-            return Single.just(false);
-        }
+//        Single<Boolean> system = runCommandWait("mount -o remount,rw /system", true);
         String appDir = systemPrivAppDir;
 
         // Копиpуем приложение в /system/priv-app или /system/app в зависимости от версии Android
         if (api >= 21) {
-            runCommandWait("cp -Rf " + appPath + "* " + appDir, true);
-            runCommandWait("chown -R 0:0 " + appDir + appName + "*", true);
-            runCommandWait("rm -Rf " + appPath + "*", true);
+            String finalAppDir1 = appDir;
+            return runCommandWait("mount -o remount,rw /system", true).flatMap(isSystem -> {
+                Log.d(TAG, "makeAppSystem: Can't mount /system" + isSystem);
+                if (isSystem)
+                    return runCommandWait("cp -Rf " + appPath + "* " + finalAppDir1, true);
+                else
+                    return Single.just(false);
+            }).flatMap(result -> {
+                Log.d(TAG, "chownRight: Can't chownRight " + result);
+                if (result)
+                    return runCommandWait("chown -R 0:0 " + finalAppDir1 + appName + "*", true);
+                else
+                   return Single.just(false);
+            }).flatMap(isChown -> {
+                Log.d(TAG, "rmDir: Can't rmDir " + isChown);
+                if (isChown)
+                    return runCommandWait("rm -Rf " + appPath + "*", true);
+                else
+                    return Single.just(false);
+            }).flatMap(isRestart -> runCommandWait("am restart", true));
         } else {
             if (api < 20) {
                 appDir = systemAppDir;
             }
             Log.e(TAG, "makeAppSystem: system");
-            runCommandWait("mv " + appPath + "* " + appDir, true);
-            runCommandWait("chown 0:0 " + appDir + appName + "*", true);
-            runCommandWait("rm -f " + appPath + "*", true);
-        }
-        runCommandWait("chmod 777 /sys/class/leds/button-backlight/brightness", true);
-        runCommandWait("chmod 777 /sys/class/timed_output/vibrator/enable", true);
+            String finalAppDir = appDir;
+            return runCommandWait("mv " + appPath + "* " + appDir, true).flatMap(result -> {
+                Log.d(TAG, "result: " + result);
+                if (result)
+                     return runCommandWait("chown 0:0 " + finalAppDir + appName + "*", true);
+                else
+                    return Single.just(false);
 
+            }).flatMap(isChown -> {
+                Log.d(TAG, "isChown: " + isChown);
+                if (isChown)
+                    return runCommandWait("rm -f " + appPath + "*", true);
+                else return Single.just(false);
+            }).flatMap(isRestart -> runCommandWait("am restart", true));
+        }
+//        runCommandWait("chmod 777 /sys/class/leds/button-backlight/brightness", true);
+//        runCommandWait("chmod 777 /sys/class/timed_output/vibrator/enable", true);});
         // Отправляем смартфон в мягкую пeрезагрузку
-        return Single.just(runCommandWait("am restart", true));
+//        return runCommandWait("am restart", true);
     }
 
 
@@ -124,21 +164,20 @@ public class ShellCommand {
         switch (val) {
             case 1:
                 if (isScreenOn())
-                    return Single.just(runCommandWait("input keyevent 26", true));
+                    return runCommandWait("input keyevent 26", true);
                 break;
             case 2:
-                if (!isScreenOn()) {
-                    Single.just(runCommandWait("input keyevent 26", true));
-                    return Single.just(runCommandWait("input swipe 100 250 450 600", true));
-                }
+                if (!isScreenOn())
+                    return runCommandWait("input keyevent 26", true)
+                            .flatMap(va -> runCommandWait("input swipe 100 250 450 600", true));
                 break;
         }
         return Single.just(true);
-
     }
 
     private static boolean isScreenOn() {
-        return runCommandWait("dumpsys input_method | grep mScreenOn=true", true) || !runCommandWait("dumpsys power | grep mPowerState=0", true);
+        return runCommandWaits("dumpsys input_method | grep mScreenOn=true", true)
+                || !runCommandWaits("dumpsys power | grep mPowerState=0", true);
 //            Process process = getProcess("dumpsys power | grep mPowerState=0", true);
 //            BufferedReader in2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
 //            String dump2 = null;
@@ -164,11 +203,13 @@ public class ShellCommand {
         Log.d(TAG, "setWifi");
         switch (val) {
             case 1:
-                return Single.just(runCommandWait("svc wifi disable", true));
+                return runCommandWait("svc wifi disable", true);
             case 2:
-                return Single.just(runCommandWait("svc wifi enable", true));
+                return runCommandWait("svc wifi enable", true);
+            default:
+                return Single.just(true);
         }
-        return Single.just(true);
+
     }
 
     /**
@@ -181,11 +222,12 @@ public class ShellCommand {
         Log.d(TAG, "setSound");
         switch (val) {
             case 1:
-                return Single.just(runCommandWait("service call audio 6 i32 2 i32 0", true));
+                return runCommandWait("service call audio 6 i32 2 i32 0", true);
             case 2:
-                return Single.just(runCommandWait("service call audio 6 i32 2 i32 7", true));
+                return runCommandWait("service call audio 6 i32 2 i32 7", true);
+            default:
+                return Single.just(true);
         }
-        return Single.just(true);
     }
 
     /**
@@ -207,27 +249,27 @@ public class ShellCommand {
                 // Set Airplane / Flight mode using su commands.
                 if (state)
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                        return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + false, true))
+                        return runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + false, true)
                                 .doAfterSuccess(aBoolean -> runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + false, true));
                     } else {
-                        return Single.just(runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
+                        return runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
                                 "&& input keyevent 19 " +
                                 "&& input keyevent 23" +
                                 "&& input keyevent 22 " +
-                                "&& input keyevent 66", true));
+                                "&& input keyevent 66", true);
                     }
                 break;
             case 2:
                 if (!state)
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                        return Single.just(runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + true, true))
+                        return runCommandWait(COMMAND_FLIGHT_MODE_1 + " " + true, true)
                                 .doAfterSuccess(aBoolean -> runCommandWait(COMMAND_FLIGHT_MODE_2 + " " + true, true));
                     } else {
-                        return Single.just(runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
+                        return runCommandWait("am start -a android.settings.AIRPLANE_MODE_SETTINGS " +
                                 "&& input keyevent 19 " +
                                 "&& input keyevent 23" +
                                 "&& input keyevent 22 " +
-                                "&& input keyevent 66", true));
+                                "&& input keyevent 66", true);
 
                     }
                 break;
@@ -248,26 +290,24 @@ public class ShellCommand {
     static public Single<Boolean> setOnFlash(boolean val) {
         Log.d(TAG, "setOnFlash");
         if (val)
-            return Single.just(runCommandWait("echo 125 > /sys/class/leds/button-backlight/brightness", true));
+            return runCommandWait("echo 125 > /sys/class/leds/button-backlight/brightness", true);
         else
-            return Single.just(runCommandWait("echo 0 > /sys/class/leds/button-backlight/brightness", true));
+            return runCommandWait("echo 0 > /sys/class/leds/button-backlight/brightness", true);
 
     }
 
     static public Single<Boolean> setOnVibrate(boolean val) {
         Log.d(TAG, "setOnVibrate");
-
-//       return   Single.just( runCommandWait("echo 10000 > /sys/devices/virtual/timed_output/vibrator/enable", true));
         if (val)
-            return Single.just(runCommandWait("echo 100 > /sys/devices/virtual/timed_output/vibrator/enable", true));
+            return runCommandWait("echo 100 > /sys/devices/virtual/timed_output/vibrator/enable", true);
         else
-            return Single.just(runCommandWait("echo 0 > /sys/devices/virtual/timed_output/vibrator/enable", true));
+            return runCommandWait("echo 0 > /sys/devices/virtual/timed_output/vibrator/enable", true);
     }
 
     static public Single<Boolean> rebootSystem(boolean val) {
         Log.d(TAG, "rebootSystem");
         if (val)
-            return Single.just(runCommandWait("reboot", true));
+            return runCommandWait("reboot", true);
         else
             return Single.just(true);
     }
@@ -276,24 +316,22 @@ public class ShellCommand {
     static public Single<Boolean> shutDownSystem(boolean val) {
         Log.d(TAG, "shutDownSystem");
         if (val)
-            return Single.just(runCommandWait("shutdown", true));
+            return runCommandWait("shutdown", true);
         else
             return Single.just(true);
     }
 
     static public Single<Boolean> setValueLocation(int val) {
         Log.d(TAG, "setValueLocation");
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            switch (val) {
-                case 0:
-                    runCommandWait(" settings put secure location_providers_allowed +gps", true);
-                case 1:
-                    runCommandWait(" settings put secure location_providers_allowed +network", true);
-
-            }
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+        switch (val) {
+            case 0:
+                return runCommandWait(" settings put secure location_providers_allowed +gps", true);
+            case 1:
+                return runCommandWait(" settings put secure location_providers_allowed +network", true);
+            default:
+                return Single.just(false);
         }
-        return Single.just(false);
-//        else
-//            return Single.just(true);
+//        }
     }
 }
